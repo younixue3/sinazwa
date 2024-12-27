@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply dark:bg-gray-900 dark:text-white bg-gray-200 h-full w-full sm:w-[320px] m-auto shadow overflow-hidden;
+  }
+
+  .fullscreen {
+    @apply h-screen w-screen absolute;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+@layer components {
+  .background {
+    @apply dark:bg-gray-700 bg-white dark:text-white text-black;
+  }
+
+  button {
+    @apply rounded-md py-1.5 m-auto px-2;
+  }
+
+  .bg-primary {
+    @apply bg-blue-950 text-white;
+  }
+
+  .bg-warning {
+    @apply bg-amber-400 text-black;
+  }
+
+  .bg-info {
+    @apply bg-sky-400 text-white;
+  }
+
+  .bg-success {
+    @apply bg-emerald-500 text-white;
+  }
+
+  .bg-danger {
+    @apply bg-red-500 text-white;
+  }
+
+  .btn-primary {
+    @apply bg-blue-950 hover:bg-blue-800 text-white;
+  }
+
+  .btn-warning {
+    @apply bg-amber-400 hover:bg-amber-300 text-black;
+  }
+
+  .btn-success {
+    @apply bg-emerald-500 hover:bg-emerald-400 text-white;
+  }
+
+  .btn-danger {
+    @apply bg-red-500 hover:bg-red-400 text-white;
+  }
+
+  .btn-outline-primary {
+    @apply border border-blue-950 text-blue-950;
+  }
+
+  .btn-outline-warning {
+    @apply border border-amber-400 text-amber-400;
+  }
+
+  .btn-outline-danger {
+    @apply border border-red-500 text-red-500;
+  }
+
+  .text-xxs {
+    font-size: 0.6rem;
+    line-height: 0.85rem;
+  }
+}
