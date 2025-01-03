@@ -28,7 +28,7 @@ export function InsertBarangMasuk({ GetDetailBarang, queryClient }) {
   useEffect(() => {
     setValue(
       'category_cake_id',
-      initialValue?.category_cake.map(category => ({
+      initialValue?.category_cake?.map(category => ({
         value: category.id,
         label: category.name
       }))
@@ -38,7 +38,7 @@ export function InsertBarangMasuk({ GetDetailBarang, queryClient }) {
   const onSubmit = form => {
     const payload = {
       ...form,
-      category_cake_id: form.category_cake_id.map(category => category.value)
+      category_cake_id: form.category_cake_id?.map(category => category.value)
     };
 
     UpdateBarang.mutate(payload, {
