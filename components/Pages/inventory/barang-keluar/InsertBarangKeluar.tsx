@@ -38,9 +38,9 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
 
   const categoryCakes = useGetCategoryCakes({ isSelect: true });
 
-  useEffect(() => {
-    setValue('category_cake_id', initialValue?.category_cake[0]?.id);
-  }, [setValue, initialValue]);
+  // useEffect(() => {
+  //   setValue('category_cake_id', initialValue?.category_cake[0]?.id);
+  // }, [setValue, initialValue]);
 
   const onSubmit = form => {
     const payload = {
