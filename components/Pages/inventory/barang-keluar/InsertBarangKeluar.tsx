@@ -19,7 +19,6 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
   const initialValue = GetDetailBarang?.data?.data;
   const categoryCakesRef = useRef();
   const BarangKeluar = useBarangKeluar();
-  console.log(initialValue);
 
   const schema = yup.object({
     qty_item: yup.number().required('Jumlah Barang harus di isi.'),
@@ -37,6 +36,10 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
   } = useForm({ values: initialValue, resolver: yupResolver(schema) });
 
   const categoryCakes = useGetCategoryCakes({ isSelect: true });
+
+  // useEffect(() => {
+  //   setValue('category_cake_id', initialValue?.category_cake[0]?.id);
+  // }, [setValue, initialValue]);
 
   const onSubmit = form => {
     const payload = {
