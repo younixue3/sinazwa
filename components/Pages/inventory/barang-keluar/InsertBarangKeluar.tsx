@@ -1,51 +1,31 @@
-import { useEffect, useRef } from 'react';
 import * as yup from 'yup';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useGetCategoryCakes from 'utils/api/category_cake/use-get-category-cakes';
 import useGetBarangs from 'utils/api/inventaris/use-get-barangs';
 import Swal from 'sweetalert2';
-import SwalErrors from 'helper/swal-errors';
-import { ModalComponent } from 'components/Modal/ModalComponent';
 import InputComponent from 'components/Form/InputComponent';
-import Select from 'react-select';
-import Input from 'components/Form/Input';
 import ButtonComponent from 'components/Button/ButtonComponent';
-import useUpdateBarang from 'utils/api/inventaris/use-update-barang';
-import useGetDetailBarang from 'utils/api/inventaris/use-get-detail-barang';
 import useBarangKeluar from 'utils/api/inventaris/use-barang-keluar';
 
 export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
   const initialValue = GetDetailBarang?.data?.data;
-  const categoryCakesRef = useRef();
   const BarangKeluar = useBarangKeluar();
 
   const schema = yup.object({
     qty_item: yup.number().required('Jumlah Barang harus di isi.'),
-    description: yup.string().required('Deskripsi harus di isi.'),
-    category_cake_id: yup.object().required('Category Cake')
+    description: yup.string().required('Deskripsi harus di isi.')
   });
   const {
     register,
     handleSubmit,
-    control,
-    setValue,
-    clearErrors,
     reset,
     formState: { errors }
   } = useForm({ values: initialValue, resolver: yupResolver(schema) });
 
-  const categoryCakes = useGetCategoryCakes({ isSelect: true });
-
-  // useEffect(() => {
-  //   setValue('category_cake_id', initialValue?.category_cake[0]?.id);
-  // }, [setValue, initialValue]);
-
   const onSubmit = form => {
     const payload = {
       ...form,
-      inventory_id: initialValue.id,
-      category_cake_id: form.category_cake_id.value
+      inventory_id: initialValue.id
     };
 
     BarangKeluar.mutate(payload, {
@@ -96,32 +76,6 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
           error={errors.description?.message}
           register={register('description')}
         />
-        <div className={'flex w-full flex-col'}>
-          <label className={'text-sm'}>Kategori Kue</label>
-          <Controller
-            control={control}
-            name="category_cake_id"
-            render={({ field }) => (
-              <Select
-                className={'text-black'}
-                {...field}
-                instanceId="category_cake_id"
-                options={categoryCakes.data || []}
-                onChange={input => {
-                  setValue('category_cake_id', input);
-                  clearErrors('category_cake_id');
-                }}
-                ref={categoryCakesRef}
-                isDisabled={categoryCakes.isLoading}
-              />
-            )}
-          />
-          {errors.category_cake_id && (
-            <span className="text-xs text-red-500">
-              {errors.category_cake_id.message.toString()}
-            </span>
-          )}
-        </div>
         <ButtonComponent
           type={'submit'}
           text={'Submit'}
