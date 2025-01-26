@@ -1,12 +1,7 @@
 import { useQueryClient } from 'react-query';
 import { useState } from 'react';
-import { ModalComponent } from 'components/Modal/ModalComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faEdit,
-  faMoneyBill,
-  faTrash
-} from '@fortawesome/free-solid-svg-icons';
+import { faMoneyBill, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import SwalErrors from 'helper/swal-errors';
 import { Each } from 'helper/Each';
@@ -14,14 +9,23 @@ import useUpdateStatusPayment from 'utils/api/inventaris/use-update-status-payme
 import useGetNota from 'utils/api/inventaris/use-get-nota';
 import useDeleteNota from 'utils/api/inventaris/use-delete-nota';
 
-export const ComeItemsTableComponent = (data: any) => {
+interface ComeItemsTableProps {
+  data: any;
+}
+
+export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
+  data
+}) => {
   const queryClient = useQueryClient();
-  const [selectedId, setSelectedId] = useState();
+  const [selectedId, setSelectedId] = useState<string>();
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const UpdateStatusPayment = useUpdateStatusPayment();
   const DeleteNota = useDeleteNota(selectedId);
 
-  const handleDelete = async id => {
+  const handleDelete = (id: string) => {
     setSelectedId(id);
     Swal.fire({
       title: 'Apakah anda yakin?',
@@ -32,10 +36,9 @@ export const ComeItemsTableComponent = (data: any) => {
       cancelButtonText: 'Tidak',
       confirmButtonText: 'Ya!',
       confirmButtonColor: '#3085d6'
-    }).then(async result => {
+    }).then(result => {
       if (result.isConfirmed) {
-        let payload: any;
-        DeleteNota.mutate(payload, {
+        DeleteNota.mutate(undefined, {
           onSuccess: () => {
             queryClient.invalidateQueries(useGetNota.keys());
             Swal.fire({
@@ -55,7 +58,7 @@ export const ComeItemsTableComponent = (data: any) => {
     });
   };
 
-  const handleUpdatePayment = async id => {
+  const handleUpdatePayment = (id: string) => {
     setSelectedId(id);
     Swal.fire({
       title: 'Update Status Pembayaran?',
@@ -66,12 +69,13 @@ export const ComeItemsTableComponent = (data: any) => {
       cancelButtonText: 'Batal',
       confirmButtonText: 'Ya!',
       confirmButtonColor: '#3085d6'
-    }).then(async result => {
+    }).then(result => {
       if (result.isConfirmed) {
         const payload: any = {
-          code_notas: [selectedId],
+          code_notas: [id],
           status_payment: 'SUDAH DIBAYAR'
         };
+
         UpdateStatusPayment.mutate(payload, {
           onSuccess: () => {
             queryClient.invalidateQueries(useGetNota.keys());
@@ -93,7 +97,7 @@ export const ComeItemsTableComponent = (data: any) => {
   };
 
   const filteredData =
-    data.data?.filter((item: any) => {
+    data?.filter((item: any) => {
       const searchFields = [
         item.code_nota,
         item.inventory.name,
@@ -104,6 +108,13 @@ export const ComeItemsTableComponent = (data: any) => {
         field?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }) || [];
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className="overflow-x-auto mt-5">
@@ -182,67 +193,99 @@ export const ComeItemsTableComponent = (data: any) => {
         </thead>
         <tbody>
           <Each
-            of={filteredData}
+            of={currentItems}
             render={(item: any, index: number) => (
-              <>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200">
-                  <td className="w-4 p-4">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 transition-colors duration-200"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">{index + 1}</td>
-                  <td className="px-6 py-4">{item.code_nota}</td>
-                  <td className="px-6 py-4">{item.expired_date}</td>
-                  <td className="px-6 py-4">{item.inventory.name}</td>
-                  <td className="px-6 py-4">{item.quantity}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-1 rounded-full ${
-                        item.status_payment === 'SUDAH DIBAYAR'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      } transition-colors duration-200`}
-                    >
-                      {item.status_payment}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">{item.description || '-'}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      {item.status_payment !== 'SUDAH DIBAYAR' && (
-                        <button
-                          className="btn-warning m-0 hover:opacity-80 transition-opacity duration-200"
-                          onClick={() => handleUpdatePayment(item.id)}
-                          disabled={item.status_payment === 'SUDAH DIBAYAR'}
-                        >
-                          <FontAwesomeIcon icon={faMoneyBill} />
-                        </button>
-                      )}
+              <tr
+                key={item.id}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
+              >
+                <td className="w-4 p-4">
+                  <div className="flex items-center">
+                    <input
+                      id={`checkbox-${item.id}`}
+                      type="checkbox"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 transition-colors duration-200"
+                    />
+                    <label htmlFor={`checkbox-${item.id}`} className="sr-only">
+                      checkbox
+                    </label>
+                  </div>
+                </td>
+                <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
+                <td className="px-6 py-4">{item.code_nota}</td>
+                <td className="px-6 py-4">{item.expired_date}</td>
+                <td className="px-6 py-4">{item.inventory.name}</td>
+                <td className="px-6 py-4">{item.quantity}</td>
+                <td className="px-6 py-4">
+                  <span
+                    className={`px-2 py-1 rounded-full ${
+                      item.status_payment === 'SUDAH DIBAYAR'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    } transition-colors duration-200`}
+                  >
+                    {item.status_payment}
+                  </span>
+                </td>
+                <td className="px-6 py-4">{item.description || '-'}</td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-2">
+                    {item.status_payment !== 'SUDAH DIBAYAR' && (
                       <button
-                        className="btn-danger m-0 hover:opacity-80 transition-opacity duration-200"
-                        onClick={() => handleDelete(item.id)}
+                        className="btn-warning m-0 hover:opacity-80 transition-opacity duration-200"
+                        onClick={() => handleUpdatePayment(item.id)}
+                        disabled={item.status_payment === 'SUDAH DIBAYAR'}
+                        title="Update Payment Status"
                       >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faMoneyBill} />
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              </>
+                    )}
+                    <button
+                      className="btn-danger m-0 hover:opacity-80 transition-opacity duration-200"
+                      onClick={() => handleDelete(item.id)}
+                      title="Delete Note"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
             )}
           />
         </tbody>
       </table>
+
+      <div className="flex justify-center mt-4 gap-2">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-3 py-1 rounded bg-gray-200 disabled:opacity-50 transition-opacity duration-200"
+        >
+          Previous
+        </button>
+        <div className="flex gap-2">
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              className={`px-3 py-1 rounded ${
+                currentPage === index + 1
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200'
+              } transition-colors duration-200`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 rounded bg-gray-200 disabled:opacity-50 transition-opacity duration-200"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

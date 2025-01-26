@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import useDeleteBarang from 'utils/api/inventaris/use-delete-barang';
 import SwalErrors from 'helper/swal-errors';
 import useGetHistoryBarang from 'utils/api/inventaris/use-get-history-barang';
+import { InputInventaris } from 'components/Pages/inventory/InputInventaris';
 
 export default function Inventaris() {
   const queryClient = useQueryClient();
@@ -63,7 +64,7 @@ export default function Inventaris() {
     <InventarisLayout>
       <TabComponent tab={['Inventaris', 'Riwayat Inventaris']}>
         <section className={'grid gap-5 p-3'}>
-          <CreateInventory />
+          <InputInventaris />
           {!GetBarangs.isLoading && (
             <Each
               of={GetBarangs.data || []}

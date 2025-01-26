@@ -6,10 +6,15 @@ import useGetBarangs from 'utils/api/inventaris/use-get-barangs';
 import { InputInventaris } from 'components/Pages/inventory/InputInventaris';
 import { ComeItemsTableComponent } from 'components/Table/ComeItemsTableComponent';
 import useGetNota from 'utils/api/inventaris/use-get-nota';
+import AccordionComponent from 'components/Accordion/AccordionComponent';
+import useGetHistoryBarang from 'utils/api/inventaris/use-get-history-barang';
+import { Each } from 'helper/Each';
 
 export default function Inventaris() {
   const GetBarangs = useGetBarangs({ isSelect: false });
   const GetNota = useGetNota();
+
+  const riwayatBarangs = useGetHistoryBarang();
 
   return (
     <AdminLayout>
@@ -23,6 +28,22 @@ export default function Inventaris() {
                 <CreateInventory />
                 <InputInventaris />
               </div>
+
+              <AccordionComponent className="mt-5" title="Riwayat Inventaris">
+                <section className={'grid gap-5 p-3'}>
+                  <Each
+                    of={riwayatBarangs.data || []}
+                    render={(item: any) => (
+                      <CardComponent title={item.inventory.name}>
+                        <div className={'p-3 bg-warning'}>
+                          Keluar : {item.qty_item}
+                        </div>
+                      </CardComponent>
+                    )}
+                  />
+                </section>
+              </AccordionComponent>
+
               <div className="mt-10">
                 {!GetBarangs.isLoading && (
                   <CardComponent>
