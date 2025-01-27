@@ -25,7 +25,8 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
   const onSubmit = form => {
     const payload = {
       ...form,
-      inventory_id: initialValue.id
+      inventory_id: initialValue.id,
+      tipe_riwayat: 2
     };
 
     BarangKeluar.mutate(payload, {

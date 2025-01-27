@@ -8,6 +8,7 @@ import { Each } from 'helper/Each';
 import useUpdateStatusPayment from 'utils/api/inventaris/use-update-status-payment';
 import useGetNota from 'utils/api/inventaris/use-get-nota';
 import useDeleteNota from 'utils/api/inventaris/use-delete-nota';
+import toRupiah from 'utils/helpers/number';
 
 interface ComeItemsTableProps {
   data: any;
@@ -172,6 +173,9 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
               Code Nota
             </th>
             <th scope="col" className="px-6 py-3">
+              Tanggal Masuk
+            </th>
+            <th scope="col" className="px-6 py-3">
               Expired Date
             </th>
             <th scope="col" className="px-6 py-3">
@@ -179,6 +183,9 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
             </th>
             <th scope="col" className="px-6 py-3">
               Quantity
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Total
             </th>
             <th scope="col" className="px-6 py-3">
               Status Payment
@@ -213,9 +220,11 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
                 </td>
                 <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
                 <td className="px-6 py-4">{item.code_nota}</td>
+                <td className="px-6 py-4">{item.created_at}</td>
                 <td className="px-6 py-4">{item.expired_date}</td>
                 <td className="px-6 py-4">{item.inventory.name}</td>
                 <td className="px-6 py-4">{item.quantity}</td>
+                <td className="px-6 py-4">Rp. {toRupiah(item.total)}</td>
                 <td className="px-6 py-4">
                   <span
                     className={`px-2 py-1 rounded-full ${

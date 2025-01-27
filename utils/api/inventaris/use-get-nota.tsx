@@ -31,7 +31,9 @@ interface NotaItem {
 interface NotaData {
   id: number;
   code_nota: string;
+  created_at: string;
   expired_date: string;
+  total: number;
   quantity: number;
   status_payment: string;
   description: string | null;
@@ -49,7 +51,9 @@ const useGetNota = () => {
           no: index + 1,
           id: nota.id,
           code_nota: nota.code_nota,
+          created_at: nota.created_at,
           expired_date: nota.expired_date,
+          total: nota.total,
           quantity: nota.quantity,
           status_payment: nota.status_payment,
           description: nota.description,

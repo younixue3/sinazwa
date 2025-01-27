@@ -12,8 +12,10 @@ const useGetHistoryBarang = () => {
       return data.map((history, index) => ({
         no: index + 1,
         qty_item: history.qty_item,
+        tipe_riwayat: history.tipe_riwayat,
         inventory: history.inventory,
-        description: history.description
+        description: history.description,
+        created_at: history.created_at
       }));
     }
   });
