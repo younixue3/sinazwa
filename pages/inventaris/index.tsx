@@ -103,7 +103,15 @@ export default function Inventaris() {
             of={riwayatBarangs.data || []}
             render={(item: any) => (
               <CardComponent title={item.inventory.name}>
-                <div className={'p-3 bg-warning'}>Keluar : {item.qty_item}</div>
+                <div
+                  className={`p-3 ${item.tipe_riwayat == 1 ? 'bg-success' : 'bg-warning'}`}
+                >
+                  {item.tipe_riwayat == 1 ? 'Keluar' : 'Masuk'} :{' '}
+                  {item.qty_item}
+                  <div className="mt-2 text-sm">
+                    Tanggal: {new Date(item.created_at).toLocaleDateString()}
+                  </div>
+                </div>
               </CardComponent>
             )}
           />
