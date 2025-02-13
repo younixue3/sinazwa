@@ -33,7 +33,7 @@ export default function Inventaris() {
   const handleNextPage = () => setCurrentPage(p => Math.min(totalPages, p + 1));
 
   const getStatusColor = (tipeRiwayat: number) =>
-    tipeRiwayat == 1
+    tipeRiwayat == 2
       ? 'bg-emerald-100 hover:bg-emerald-200'
       : 'bg-amber-100 hover:bg-amber-200';
 
@@ -77,7 +77,7 @@ export default function Inventaris() {
                             className={`p-3 rounded-lg ${getStatusColor(item.tipe_riwayat)}`}
                           >
                             <span className="text-sm text-gray-600 block mb-1">
-                              {item.tipe_riwayat == 1
+                              {item.tipe_riwayat == 2
                                 ? 'Jumlah Keluar'
                                 : 'Jumlah Masuk'}
                             </span>
