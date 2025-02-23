@@ -242,7 +242,7 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
                     {item.status_payment !== 'SUDAH DIBAYAR' && (
                       <button
                         className="btn-warning m-0 hover:opacity-80 transition-opacity duration-200"
-                        onClick={() => handleUpdatePayment(item.id)}
+                        onClick={() => handleUpdatePayment(item.code_nota)}
                         disabled={item.status_payment === 'SUDAH DIBAYAR'}
                         title="Update Payment Status"
                       >
