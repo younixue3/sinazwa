@@ -176,7 +176,7 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
               Tanggal Masuk
             </th>
             <th scope="col" className="px-6 py-3">
-              Expired Date
+              Tanggal Jatuh Tempo
             </th>
             <th scope="col" className="px-6 py-3">
               Items
