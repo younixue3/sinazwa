@@ -5,7 +5,7 @@ import { Each } from 'helper/Each';
 import ButtonComponent from 'components/Button/ButtonComponent';
 import { ModalComponent } from 'components/Modal/ModalComponent';
 import useGetBarangs from 'utils/api/inventaris/use-get-barangs';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQueryClient } from 'react-query';
 import { CreateInventory } from 'components/Pages/inventory/CreateInventory';
 import useGetDetailBarang from 'utils/api/inventaris/use-get-detail-barang';
@@ -19,12 +19,23 @@ import { InputInventaris } from 'components/Pages/inventory/InputInventaris';
 export default function Inventaris() {
   const queryClient = useQueryClient();
   const [barangId, setBarangId] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
   const GetBarangs = useGetBarangs({ isSelect: false });
   const GetDetailBarang = useGetDetailBarang({ id: barangId });
   const DeleteBarang = useDeleteBarang(barangId);
 
   const riwayatBarangs = useGetHistoryBarang();
+
+  useEffect(() => {
+    if (GetBarangs.data) {
+      const filtered = GetBarangs.data.filter((item) => 
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  }, [searchTerm, GetBarangs.data]);
 
   const handleDelete = async id => {
     setBarangId(id);
@@ -65,9 +76,18 @@ export default function Inventaris() {
       <TabComponent tab={['Inventaris', 'Riwayat Inventaris']}>
         <section className={'grid gap-5 p-3'}>
           <InputInventaris />
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Cari barang..."
+              className="input input-bordered w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           {!GetBarangs.isLoading && (
             <Each
-              of={GetBarangs.data || []}
+              of={filteredData || []}
               render={(item: any) => (
                 <CardComponent title={item.name}>
                   <div className={'p-3'}>
