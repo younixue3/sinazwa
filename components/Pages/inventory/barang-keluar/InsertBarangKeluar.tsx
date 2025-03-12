@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useGetBarangs from 'utils/api/inventaris/use-get-barangs';
 import Swal from 'sweetalert2';
@@ -8,6 +8,7 @@ import ButtonComponent from 'components/Button/ButtonComponent';
 import useBarangKeluar from 'utils/api/inventaris/use-barang-keluar';
 import useGetCategoryCakes from 'utils/api/category_cake/use-get-category-cakes';
 import { useRef } from 'react';
+import Select from 'react-select/dist/declarations/src/Select';
 
 export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
   const initialValue = GetDetailBarang?.data?.data;
@@ -97,14 +98,18 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
             render={({ field }) => (
               <Select
                 className={'text-black'}
+                inputValue={field.value ? field.value.label : ''}
+                onInputChange={() => {}}
+                onMenuOpen={() => {}}
+                onMenuClose={() => {}}
                 {...field}
                 instanceId="category_cake_id"
                 options={categoryCakes.data || []}
-                onChange={input => {
+                onChange={(input) => {
+                  field.onChange(input);
                   setValue('category_cake_id', input);
                   clearErrors('category_cake_id');
                 }}
-                ref={categoryCakesRef}
                 isDisabled={categoryCakes.isLoading}
               />
             )}
