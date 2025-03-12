@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import InventarisLayout from 'pages/inventaris/InventarisLayout';
 import CardComponent from 'components/Card/CardComponent';
 import { Each } from 'helper/Each';
@@ -7,38 +8,56 @@ import * as yup from 'yup';
 import { ModalComponent } from 'components/Modal/ModalComponent';
 import useGetBarangs from 'utils/api/inventaris/use-get-barangs';
 import { useQueryClient } from 'react-query';
-import { useState } from 'react';
 import useGetDetailBarang from 'utils/api/inventaris/use-get-detail-barang';
 import { InsertBarangKeluar } from 'components/Pages/inventory/barang-keluar/InsertBarangKeluar';
 
 export default function BarangKeluar() {
   const queryClient = useQueryClient();
-  const [barangId, setBarangId] = useState();
+  const [barangId, setBarangId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
   const GetBarangs = useGetBarangs({ isSelect: false });
   const GetDetailBarang = useGetDetailBarang({ id: barangId });
 
   const schema = yup.object({ stock: yup.number().required() });
-  const {} = useForm({ resolver: yupResolver(schema) });
+  useForm({ resolver: yupResolver(schema) });
+
+  useEffect(() => {
+    if (GetBarangs.data) {
+      const filtered = GetBarangs.data.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  }, [searchTerm, GetBarangs.data]);
 
   return (
     <InventarisLayout>
-      <section className={'grid gap-5 p-3'}>
-        {!GetBarangs.isLoading && (
+      <section className="grid gap-5 p-3">
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Cari barang..."
+            className="input input-bordered w-full border-[1px] h-10 rounded-md p-4 border-black"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        {!GetBarangs.isLoading && filteredData.length > 0 ? (
           <Each
-            of={GetBarangs.data}
+            of={filteredData}
             render={(item: any) => (
-              <CardComponent title={item.name}>
-                <div className={'grid grid-cols-6 gap-2 p-3'}>
-                  <div className={'col-span-6'}>Stock : {item.qty}</div>
-                  <div className={'col-span-6'}>
+              <CardComponent title={item.name} key={item.id}>
+                <div className="grid grid-cols-6 gap-2 p-3">
+                  <div className="col-span-6">Stock: {item.qty}</div>
+                  <div className="col-span-6">
                     <ModalComponent
-                      text={'Ambil stock'}
-                      title={'Ambil stock'}
-                      color={'btn-danger text-xs w-full'}
-                      onClick={() => {
-                        setBarangId(item.id);
-                      }}
+                      text="Ambil stock"
+                      title="Ambil stock"
+                      color="btn-danger text-xs w-full"
+                      onClick={() => setBarangId(item.id)}
                     >
                       <InsertBarangKeluar
                         queryClient={queryClient}
@@ -50,6 +69,8 @@ export default function BarangKeluar() {
               </CardComponent>
             )}
           />
+        ) : (
+          <p className="text-center text-gray-500">Barang tidak ditemukan.</p>
         )}
       </section>
     </InventarisLayout>

@@ -8,7 +8,8 @@ import ButtonComponent from 'components/Button/ButtonComponent';
 import useBarangKeluar from 'utils/api/inventaris/use-barang-keluar';
 import useGetCategoryCakes from 'utils/api/category_cake/use-get-category-cakes';
 import { useRef } from 'react';
-import Select from 'react-select/dist/declarations/src/Select';
+// import Select from 'react-select/dist/declarations/src/Select';
+import Select from 'react-select';
 
 export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
   const initialValue = GetDetailBarang?.data?.data;

@@ -80,7 +80,7 @@ export default function Inventaris() {
             <input
               type="text"
               placeholder="Cari barang..."
-              className="input input-bordered w-full"
+              className="input input-bordered w-full border-[1px] h-10 rounded-md p-4 border-black"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
