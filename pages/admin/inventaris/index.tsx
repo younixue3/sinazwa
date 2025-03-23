@@ -58,7 +58,7 @@ export default function Inventaris() {
               <InputInventaris />
             </div>
 
-            <AccordionComponent className="mb-8" title="Riwayat Inventaris">
+            {/* <AccordionComponent className="mb-8" title="Riwayat Inventaris">
               <section className="space-y-4 p-4">
                 {riwayatBarangs && (
                   <>
@@ -123,7 +123,7 @@ export default function Inventaris() {
                   </>
                 )}
               </section>
-            </AccordionComponent>
+            </AccordionComponent> */}
 
             {!isLoadingBarangs && (
               <CardComponent>
@@ -136,7 +136,8 @@ export default function Inventaris() {
               </CardComponent>
             )}
 
-            {!isLoadingNota && (
+           <div className='my-4'>
+           {!isLoadingNota && (
               <CardComponent>
                 <div className="p-6">
                   <h2 className="text-2xl font-bold text-gray-800 mb-6">
@@ -146,6 +147,7 @@ export default function Inventaris() {
                 </div>
               </CardComponent>
             )}
+           </div>
           </div>
         </CardComponent>
       </main>
