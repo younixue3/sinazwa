@@ -10,6 +10,8 @@ import useGetDetailInstallment from 'utils/api/cicilan/use-get-detail-installmen
 import useDeleteInstallment from 'utils/api/cicilan/use-delete-installment';
 import { EditInstallment } from 'components/Pages/cicilan/EditInstallment';
 import useGetInstallment from 'utils/api/cicilan/use-get-instalment';
+import useUpdateStatusPegawai from 'utils/api/cicilan/use-update-state-pegawai';
+import { statusPegawai } from 'utils/api/cicilan/installmentApi';
 
 export const CicilanTableComponent = (data: any) => {
   const queryClient = useQueryClient();
@@ -17,6 +19,31 @@ export const CicilanTableComponent = (data: any) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const GetDetailInstallment = useGetDetailInstallment({ id: installmentId });
   const DeleteInstallment = useDeleteInstallment(installmentId);
+
+
+  const handleStatusPegawai = async (id: number, aktif: number) => {
+    try {
+      const newAktif = aktif === 1 ? 0 : 1;
+      await statusPegawai(id, { aktif: newAktif });
+  
+      Swal.fire({
+        title: 'Berhasil!',
+        text: `Status pegawai diubah menjadi ${newAktif ? 'Aktif' : 'Tidak Aktif'}.`,
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+  
+      window.location.reload(); // Reload untuk memastikan perubahan terlihat
+    } catch (error) {
+      Swal.fire({
+        title: 'Gagal!',
+        text: 'Terjadi kesalahan saat mengubah status pegawai.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
+  };
 
   const handleDelete = async (id: string) => {
     setInstallmentId(id);
@@ -146,12 +173,31 @@ export const CicilanTableComponent = (data: any) => {
                 <td className="px-6 py-4">{item.remaining_installment}</td>
                 <td className="px-6 py-4">{item.user}</td>
                 <td className="px-6 py-4">
+                  <button
+                    className={`px-4 py-2 rounded-lg text-white ${
+                      item.aktif === 1
+                        ? 'bg-green-500 hover:bg-green-600'
+                        : 'bg-gray-500 hover:bg-gray-600'
+                    }`}
+                    onClick={() => handleStatusPegawai(item.id, item.aktif)}
+                  >
+                    {item.aktif == 1 ? 'Nonaktifkan' : 'Aktifkan'} Pegawai
+                  </button>
+                </td>
+                <td className="px-6 py-4">
                   <div className="flex gap-2">
                     <button
                       className="btn-danger m-0 hover:opacity-80 transition-opacity duration-200"
                       onClick={() => handleDelete(item.id)}
                     >
                       <FontAwesomeIcon icon={faTrash} />
+                    </button>
+
+                    <button
+                      className="btn-warning m-0 hover:opacity-80 transition-opacity duration-200"
+                      onClick={() => handleEdit(item.id)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
                     </button>
                   </div>
                 </td>

@@ -24,5 +24,5 @@ export {
   getInstallments,
   storeInstallment,
   updateDailyInstallment,
-  deleteInstallment
+  deleteInstallment,
 };

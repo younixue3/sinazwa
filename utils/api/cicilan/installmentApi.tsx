@@ -39,6 +39,12 @@ const resetInstallments = () => {
   const result = hitApi().get('/reset-instalment');
   return result;
 };
+
+const statusPegawai = async (id, payload ) => {
+  const result = await hitApi().put(`/status-pegawai/${id}`, payload);
+  return result.data;
+};
+
 export {
   getInstallment,
   getDetailInstallment,
@@ -47,5 +53,6 @@ export {
   editInstallment,
   deleteInstallment,
   getLastInstallment,
-  resetInstallments
+  resetInstallments,
+  statusPegawai
 };

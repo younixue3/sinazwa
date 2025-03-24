@@ -11,7 +11,8 @@ const useGetInstallment = () => {
         id: installment.id,
         daily_installment: installment.daily_installments,
         remaining_installment: installment.remaining_installments,
-        user: installment.user.name
+        user: installment.user.name,
+        aktif: installment.aktif,
       }));
     }
   });
@@ -28,6 +29,7 @@ const data = [
     cake_production_id: 12,
     cakes_available: 30,
     destination_id: 3,
+
     cake_production: [
       {
         id: 12,
