@@ -12,12 +12,14 @@ const useGetDelivery = () => {
         destination: delivery.destination,
         cake_production: delivery.cake_production.category_cake.name,
         qty_cake: delivery.qty_cake,
+        box: delivery.box,
         status_delivery: delivery.status_delivery,
         date_delivery: delivery.date_delivery,
         today_shipments_count: delivery.today_shipments_count
       }));
     }
   });
+  console.log(query);
   return query;
 };
 

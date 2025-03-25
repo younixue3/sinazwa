@@ -143,6 +143,7 @@ export const DeliveryTableComponent = (data: any) => {
                 <td className="px-6 py-4">{item.destination.name}</td>
                 <td className="px-6 py-4">{item.cake_production}</td>
                 <td className="px-6 py-4">{item.qty_cake}</td>
+                <td className="px-6 py-4">{item.box}</td>
                 <td className="px-6 py-4">{item.status_delivery}</td>
                 <td className="px-6 py-4">{item.date_delivery}</td>
                 <td className="px-6 py-4">{item.today_shipments_count}</td>

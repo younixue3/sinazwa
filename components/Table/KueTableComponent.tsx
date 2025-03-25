@@ -217,6 +217,7 @@ export const KueTableComponent = (data: any) => {
                 <td className="px-6 py-4">{item.category_cake_id}</td>
                 <td className="px-6 py-4">{item.name}</td>
                 <td className="px-6 py-4">Rp. {toRupiah(item.price)}</td>
+                <td className="px-6 py-4">{item.box}</td>
                 <td className="px-6 py-4">{item.qty}</td>
                 <td className="px-6 py-4">{item.description}</td>
                 <td className="px-6 py-4">

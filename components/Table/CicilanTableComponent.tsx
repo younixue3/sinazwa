@@ -30,7 +30,7 @@ export const CicilanTableComponent = (data: any) => {
         title: 'Berhasil!',
         text: `Status pegawai diubah menjadi ${newAktif ? 'Aktif' : 'Tidak Aktif'}.`,
         icon: 'success',
-        timer: 1500,
+        timer: 3000,
         showConfirmButton: false
       });
   

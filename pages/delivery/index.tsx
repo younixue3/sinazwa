@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import CardComponent from 'components/Card/CardComponent';
 import { Each } from 'helper/Each';
 import ButtonComponent from 'components/Button/ButtonComponent';
@@ -8,13 +9,36 @@ import { faTruck } from '@fortawesome/free-solid-svg-icons';
 
 export default function Delivery() {
   const { data: deliveries, isLoading } = useGetDelivery();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredDeliveries, setFilteredDeliveries] = useState<any[]>([]);
+
+  // Filter data berdasarkan pencarian
+  useEffect(() => {
+    if (deliveries) {
+      const filtered = deliveries.filter((delivery: any) =>
+        delivery.destination.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredDeliveries(filtered);
+    }
+  }, [searchTerm, deliveries]);
 
   return (
     <DeliveryLayout>
+      {/* Input pencarian */}
+      <div className='mx-2 mt-4'>
+      <input
+        type="text"
+        placeholder="Cari tujuan..."
+        className="input input-bordered w-full border-[1px] h-10 rounded-md p-4 border-black mb-3"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      </div>
+
       <section className="grid gap-5 p-3">
-        {!isLoading && deliveries?.length > 0 ? (
+        {!isLoading && filteredDeliveries.length > 0 ? (
           <Each
-            of={deliveries}
+            of={filteredDeliveries}
             render={(delivery: any) => (
               <CardComponent title={delivery.destination.name}>
                 <div className="p-3">
@@ -25,7 +49,7 @@ export default function Delivery() {
                     />
                     <div className="w-full flex flex-col gap-2">
                       <ButtonComponent
-                        text={`${delivery.cake_production} : ${delivery.qty_cake} pcs`}
+                        text={`${delivery.cake_production} : ${delivery.box} box`}
                         color="btn-primary text-xs ml-0"
                       />
                       <ButtonComponent
@@ -38,9 +62,7 @@ export default function Delivery() {
                       />
                       <div className="text-xs">
                         Jadwal Antar:{' '}
-                        {new Date(delivery.date_delivery).toLocaleDateString(
-                          'id'
-                        )}
+                        {new Date(delivery.date_delivery).toLocaleDateString('id')}
                       </div>
                     </div>
                   </div>
@@ -50,7 +72,7 @@ export default function Delivery() {
           />
         ) : (
           <div className="text-center text-gray-500 py-8">
-            Tidak ada data pengiriman
+            {isLoading ? 'Memuat data...' : 'Tidak ada data pengiriman'}
           </div>
         )}
       </section>

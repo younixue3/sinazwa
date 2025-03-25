@@ -11,14 +11,15 @@ import useGetCake from 'utils/api/cake_production/use-get-cake';
 // import useUpdateOutlet from 'utils/api/outlet/use-update-outlet';
 // import useGetOutlet from 'utils/api/outlet/use-get-outlet';
 import Select from 'react-select';
-import useUpdateDelivery from 'utils/api/delivery/use-update-delivery';
+// import useUpdateDelivery from 'utils/api/delivery/use-update-delivery';
 // import { useQueryClient } from 'react-query';
 import useGetDestination from 'utils/api/destination/use-get-destination';
 import useGetDelivery from 'utils/api/delivery/use-get-delivery';
+import useUpdateBox from 'utils/api/delivery/use-update-box';
 
 export function EditDelivery({ GetDetailDelivery, queryClient }) {
   const initialValue = GetDetailDelivery?.data?.data;
-  const UpdateDelivery = useUpdateDelivery(initialValue?.id);
+  const UpdateDelivery = useUpdateBox(initialValue?.id);
   const cakeProductionRef = useRef();
   const destinationRef = useRef();
 
@@ -27,7 +28,7 @@ export function EditDelivery({ GetDetailDelivery, queryClient }) {
   const destinationDelivery = useGetDestination({ isSelect: true });
 
   const schema = yup.object({
-    qty_cake: yup.number().required('Jumlah Kue harus di isi.'),
+    box: yup.number().required('Jumlah Kue harus di isi.'),
     cake_production_id: yup.object().required('Kue harus di pilih.'),
     destination_id: yup.object().required('Destinasi harus di pilih.')
   });
@@ -111,8 +112,8 @@ export function EditDelivery({ GetDetailDelivery, queryClient }) {
           label={'Jumlah Kue'}
           type={'number'}
           placeholder={'Masukkan Jumlah Kue'}
-          error={errors.qty_cake?.message}
-          register={register('qty_cake')}
+          error={errors.box?.message}
+          register={register('box')}
         />
         <div className={'flex w-full flex-col'}>
           <label className={'text-sm'}>Destinasi Antar</label>

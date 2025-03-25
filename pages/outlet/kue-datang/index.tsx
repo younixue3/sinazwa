@@ -77,7 +77,7 @@ export default function KueDatang() {
                       </div>
                     </div>
                   </div>
-                  {item.status_delivery === 'PROSES' && (
+                  {item.status_delivery == 'PROSES' && (
                     <div className={'border-0 border-t-2 mt-3 pt-3'}>
                       <ButtonComponent
                         text={'Validasi'}

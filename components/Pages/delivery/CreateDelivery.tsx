@@ -21,7 +21,7 @@ export function CreateDelivery() {
   const StoreDelivery = useStoreDelivery();
 
   const schema = yup.object({
-    qty_cake: yup.number().required('Jumlah Kue harus di isi.'),
+    box: yup.number().required('Jumlah Box harus di isi.'),
     cake_production_id: yup.object().required('Kue harus di pilih.'),
     destination_id: yup.object().required('Destinasi harus di pilih.')
   });
@@ -99,11 +99,11 @@ export function CreateDelivery() {
             </p>
           </div>
           <InputComponent
-            label={'Jumlah Kue'}
+            label={'Jumlah Box'}
             type={'number'}
-            placeholder={'Masukkan Jumlah Kue'}
-            error={errors.qty_cake?.message}
-            register={register('qty_cake')}
+            placeholder={'Masukkan Jumlah Box'}
+            error={errors.box?.message}
+            register={register('box')}
           />
           <div className={'flex w-full flex-col'}>
             <label className={'text-sm'}>Destinasi Antar</label>

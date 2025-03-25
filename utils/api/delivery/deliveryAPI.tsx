@@ -25,10 +25,16 @@ const deleteDelivery = async id => {
   return result.data;
 };
 
+const updateBox = async (id, payload) => {
+  const result = await hitApi().put(`/update-delivery-box/${id}`,payload );
+  return result.data;
+};
+
 export {
   getDelivery,
   getDetailDelivery,
   storeDelivery,
   updateDelivery,
-  deleteDelivery
+  deleteDelivery,
+  updateBox
 };
