@@ -10,6 +10,7 @@ const useGetInstallment = () => {
         no: index + 1,
         id: installment.id,
         daily_installment: installment.daily_installments,
+        remaining_installment: installment.remaining_installments,
         remaining_yesterday: installment.remaining_yesterday,
         user: installment.user.name,
         aktif: installment.aktif,

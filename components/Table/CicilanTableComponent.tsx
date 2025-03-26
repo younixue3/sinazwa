@@ -170,6 +170,7 @@ export const CicilanTableComponent = (data: any) => {
                 </th>
                 <td className="px-6 py-4">{item.id}</td>
                 <td className="px-6 py-4">{item.daily_installment}</td>
+                <td className="px-6 py-4">{item.remaining_installment}</td>
                 <td className="px-6 py-4">{item.remaining_yesterday}</td>
                 <td className="px-6 py-4">{item.user}</td>
                 <td className="px-6 py-4">
