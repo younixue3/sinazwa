@@ -79,6 +79,12 @@ export function EditInstallment({
           error={errors.daily_installments?.message}
           register={register('daily_installments')}
         />
+        <InputComponent
+          label={'Sisa Cicilan Harian'}
+          placeholder={'Sisa Cicilan Harian'}
+          error={errors.remaining_yesterday?.message}
+          register={register('remaining_yesterday')}
+        />
         <div className={'flex w-full flex-col'}>
           <label className={'text-sm'}>Karyawan</label>
           <Controller
