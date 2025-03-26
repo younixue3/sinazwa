@@ -31,7 +31,18 @@ export function EditCake({ GetDetailCake, queryClient }) {
     formState: { errors }
   } = useForm({ values: initialValue, resolver: yupResolver(schema) });
 
-  const onSubmit = form => {
+  const onSubmit = async form => {
+    const result = await Swal.fire({
+      title: 'Konfirmasi',
+      text: 'Apakah Anda yakin akan input jumlah stock kue?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Input!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (!result.isConfirmed) return; // Jika user membatalkan, tidak melakukan submit
+   
     const payload = {
       ...form,
       category_cake_id: initialValue.category_cake_id,
