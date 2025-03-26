@@ -74,12 +74,18 @@ export function EditInstallment({
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className={'grid grid-cols-1 gap-3'}>
         <InputComponent
-          label={'Cicilan Harian'}
+          label={'Tentukan Cicilan Harian'}
           placeholder={'Masukkan Cicilan Harian'}
           error={errors.daily_installments?.message}
           register={register('daily_installments')}
         />
         <InputComponent
+          label={'Total Cicilan'}
+          placeholder={'Total Cicilan'}
+          error={errors.remaining_installments?.message}
+          register={register('remaining_installments')}
+        />
+         <InputComponent
           label={'Sisa Cicilan Harian'}
           placeholder={'Sisa Cicilan Harian'}
           error={errors.remaining_yesterday?.message}
