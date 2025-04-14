@@ -19,7 +19,7 @@ export function CreateInstallment() {
   const StoreInstallment = useStoreInstallment();
 
   const schema = yup.object({
-    daily_installment: yup.number().required('Cicilan Harian harus di isi.'),
+    daily_installments: yup.number().required('Cicilan Harian harus di isi.'),
     user_id: yup.object().required('Job haru di isi.')
   });
   const {
@@ -72,8 +72,8 @@ export function CreateInstallment() {
           <InputComponent
             label={'Cicilan Harian'}
             placeholder={'Masukkan Cicilan Harian'}
-            error={errors.daily_installment?.message}
-            register={register('daily_installment')}
+            error={errors.daily_installments?.message}
+            register={register('daily_installments')}
           />
           <div className={'flex w-full flex-col'}>
             <label className={'text-sm'}>Karyawan</label>
