@@ -3,12 +3,15 @@ import CardComponent from 'components/Card/CardComponent';
 import AccordionComponent from 'components/Accordion/AccordionComponent';
 import { useState } from 'react';
 import useGetHistoryBarang from 'utils/api/inventaris/use-get-history-barang';
+import useDetailHistoryItem from 'utils/api/inventaris/use-detail-history-item';
 
 export default function Inventaris() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { data: riwayatBarangs } = useGetHistoryBarang();
+  const { data: riwayatBarangs } = useDetailHistoryItem();
+
+  console.log(riwayatBarangs);
 
   const totalPages = riwayatBarangs
     ? Math.ceil(riwayatBarangs.length / itemsPerPage)
@@ -22,17 +25,10 @@ export default function Inventaris() {
   const handlePrevPage = () => setCurrentPage(p => Math.max(1, p - 1));
   const handleNextPage = () => setCurrentPage(p => Math.min(totalPages, p + 1));
 
-  const getStatusColor = (tipeRiwayat: number) =>
-    tipeRiwayat == 2
+  const getStatusColor = (tipeRiwayat: string) =>
+    tipeRiwayat === "2"
       ? 'bg-emerald-100 hover:bg-emerald-200'
       : 'bg-amber-100 hover:bg-amber-200';
-
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString('id-ID', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
 
   return (
     <AdminLayout>
@@ -72,29 +68,41 @@ export default function Inventaris() {
                           <th className="px-4 py-3 text-left text-gray-600">
                             Tanggal
                           </th>
+                          <th className="px-4 py-3 text-left text-gray-600">
+                            Kategori Kue
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {paginatedRiwayatBarangs.map((item: any) => (
+                        {paginatedRiwayatBarangs?.map((item: any) => (
                           <tr
                             key={item.id}
                             className="border-b hover:bg-gray-50"
                           >
                             <td className="px-4 py-3 text-gray-800">
-                              {item.inventory.name}
+                              {item.name}
                             </td>
                             <td className="px-4 py-3 text-gray-900 font-semibold">
-                              {item.qty_item}
+                              {item.qty}
                             </td>
                             <td
                               className={`px-4 py-3 text-center font-semibold ${getStatusColor(item.tipe_riwayat)}`}
                             >
-                              {item.tipe_riwayat == 2
+                              {item.tipe_riwayat === "1"
                                 ? 'Jumlah Keluar'
                                 : 'Jumlah Masuk'}
                             </td>
                             <td className="px-4 py-3 text-gray-800">
-                              {formatDate(item.created_at)}
+                              {item.created_at}
+                            </td>
+                            <td className="px-4 py-3 text-gray-800">
+                              <ul className="list-disc pl-4">
+                                {item.category_cake?.map((category: any) => (
+                                  <li key={category.id} className="text-sm">
+                                    {category.name}
+                                  </li>
+                                ))}
+                              </ul>
                             </td>
                           </tr>
                         ))}

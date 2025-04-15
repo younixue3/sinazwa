@@ -56,6 +56,12 @@ const updateStatusPayment = async payload => {
   return result.data;
 };
 
+
+const detailHistoryItem = async () => {
+  const result = await hitApi().get('detail-history-item')
+  return result.data
+}
+
 export {
   getBarangs,
   getDetailBarang,
@@ -67,5 +73,6 @@ export {
   barangMasuk,
   getComeItems,
   updateStatusPayment,
-  deleteComeItem
+  deleteComeItem,
+  detailHistoryItem
 };
