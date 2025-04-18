@@ -20,11 +20,11 @@ export default function InventarisLayout({ children }: any) {
         <BotNavComponent
           page={[
             { url: '/inventaris', icon: 'faHouse', title: 'Produksi' },
-            {
-              url: '/inventaris/barang-masuk',
-              icon: 'faRightToBracket',
-              title: 'Barang Masuk'
-            },
+            // {
+            //   url: '/inventaris/barang-masuk',
+            //   icon: 'faRightToBracket',
+            //   title: 'Barang Masuk'
+            // },
             {
               url: '/inventaris/barang-keluar',
               icon: 'faRightFromBracket',

@@ -52,7 +52,7 @@ export default function BarangMasuk() {
               <CardComponent title={item.name} key={item.id}>
                 <div className="grid grid-cols-6 gap-2 p-3">
                   <div className="col-span-6">Stock: {item.qty}</div>
-                  <div className="col-span-6">
+                  {/* <div className="col-span-6">
                     <ModalComponent
                       text="Tambah Stock"
                       title="Tambah Stock"
@@ -64,7 +64,7 @@ export default function BarangMasuk() {
                         GetDetailBarang={GetDetailBarang}
                       />
                     </ModalComponent>
-                  </div>
+                  </div> */}
                 </div>
               </CardComponent>
             )}

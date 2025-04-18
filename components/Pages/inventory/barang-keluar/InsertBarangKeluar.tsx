@@ -18,7 +18,7 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
 
   const schema = yup.object({
     qty_item: yup.number().required('Jumlah Barang harus di isi.'),
-    category_cake_id: yup.object().required('Category Cake'),
+    category_cake_id: yup.array().required('Category Cake'),
     description: yup.string().required('Deskripsi harus di isi.')
   });
   const {
@@ -36,10 +36,11 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
 
 
   const onSubmit = form => {
+    console.log(form);
     const payload = {
       ...form,
       inventory_id: initialValue.id,
-      category_cake_id: form.category_cake_id.value,
+      category_cake_id: form.category_cake_id.map(item => item.value),
       tipe_riwayat: 2
     };
 
@@ -98,6 +99,7 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
             name="category_cake_id"
             render={({ field }) => (
               <Select
+                isMulti
                 className={'text-black'}
                 inputValue={field.value ? field.value.label : ''}
                 onInputChange={() => {}}

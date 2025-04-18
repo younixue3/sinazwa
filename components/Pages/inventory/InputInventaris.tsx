@@ -95,7 +95,7 @@ export function InputInventaris() {
       color={'btn-success text-xs w-full'}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={'grid grid-cols-1 gap-3'}>
+        <div className={'grid grid-cols-1 gap-3 h-[35rem] overflow-auto'}>
           <InputComponent
             label={'Kode Nota'}
             placeholder={'Masukkan Kode Nota'}
