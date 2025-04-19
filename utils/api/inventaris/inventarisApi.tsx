@@ -58,7 +58,7 @@ const updateStatusPayment = async payload => {
 
 
 const detailHistoryItem = async () => {
-  const result = await hitApi().get('detail-history-item')
+  const result = await hitApi().get('/detail-history-item')
   return result.data
 }
 

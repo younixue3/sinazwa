@@ -18,26 +18,25 @@ import { InputInventaris } from 'components/Pages/inventory/InputInventaris';
 
 export default function Inventaris() {
   const queryClient = useQueryClient();
-  const [barangId, setBarangId] = useState();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
+
+  const [barangId, setBarangId] = useState<number | null>(null);
+  const [searchTermInventaris, setSearchTermInventaris] = useState('');
+  const [searchTermRiwayat, setSearchTermRiwayat] = useState('');
 
   const GetBarangs = useGetBarangs({ isSelect: false });
   const GetDetailBarang = useGetDetailBarang({ id: barangId });
   const DeleteBarang = useDeleteBarang(barangId);
-
   const riwayatBarangs = useGetHistoryBarang();
 
-  useEffect(() => {
-    if (GetBarangs.data) {
-      const filtered = GetBarangs.data.filter((item) => 
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
-  }, [searchTerm, GetBarangs.data]);
+  const filteredInventaris = GetBarangs.data?.filter(item =>
+    item.name.toLowerCase().includes(searchTermInventaris.toLowerCase())
+  ) ?? [];
 
-  const handleDelete = async id => {
+  const filteredRiwayat = riwayatBarangs.data?.filter(item =>
+    item.inventory?.name.toLowerCase().includes(searchTermRiwayat.toLowerCase())
+  ) ?? [];
+
+  const handleDelete = async (id: number) => {
     setBarangId(id);
     Swal.fire({
       title: 'Apakah anda yakin?',
@@ -47,25 +46,24 @@ export default function Inventaris() {
       cancelButtonColor: '#d33',
       cancelButtonText: 'Tidak',
       confirmButtonText: 'Ya!',
-      confirmButtonColor: '#3085d6'
+      confirmButtonColor: '#3085d6',
     }).then(async result => {
       if (result.isConfirmed) {
-        let payload: any;
-        DeleteBarang.mutate(payload, {
+        DeleteBarang.mutate(null, {
           onSuccess: () => {
             queryClient.invalidateQueries(useGetBarangs.keys());
             Swal.fire({
               title: 'Berhasil!',
-              text: 'Barang berhasil di hapus.',
+              text: 'Barang berhasil dihapus.',
               icon: 'success',
               timer: 1500,
-              showConfirmButton: false
+              showConfirmButton: false,
             });
           },
           onError: (err: any) => {
             const errors = err.response.data;
             SwalErrors({ errors });
-          }
+          },
         });
       }
     });
@@ -74,24 +72,27 @@ export default function Inventaris() {
   return (
     <InventarisLayout>
       <TabComponent tab={['Inventaris', 'Riwayat Inventaris']}>
+        {/* Tab: Inventaris */}
         <section className={'grid gap-5 p-3'}>
           <InputInventaris />
+
           <div className="mb-3">
             <input
               type="text"
               placeholder="Cari barang..."
               className="input input-bordered w-full border-[1px] h-10 rounded-md p-4 border-black"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTermInventaris}
+              onChange={(e) => setSearchTermInventaris(e.target.value)}
             />
           </div>
+
           {!GetBarangs.isLoading && (
             <Each
-              of={filteredData || []}
+              of={filteredInventaris}
               render={(item: any) => (
-                <CardComponent title={item.name}>
+                <CardComponent key={item.id} title={item.name}>
                   <div className={'p-3'}>
-                    Stock : {item.qty}
+                    Stock: {item.qty}
                     <div className={'grid grid-cols-2 gap-4 mt-5'}>
                       <ModalComponent
                         text={'Edit'}
@@ -118,16 +119,27 @@ export default function Inventaris() {
             />
           )}
         </section>
+
+        {/* Tab: Riwayat Inventaris */}
         <section className={'grid gap-5 p-3'}>
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Cari riwayat barang..."
+              className="input input-bordered w-full border-[1px] h-10 rounded-md p-4 border-black"
+              value={searchTermRiwayat}
+              onChange={(e) => setSearchTermRiwayat(e.target.value)}
+            />
+          </div>
+
           <Each
-            of={riwayatBarangs.data || []}
-            render={(item: any) => (
-              <CardComponent title={item.inventory.name}>
+            of={filteredRiwayat}
+            render={(item: any, index) => (
+              <CardComponent key={index} title={item.inventory.name}>
                 <div
                   className={`p-3 ${item.tipe_riwayat == 2 ? 'bg-success' : 'bg-warning'}`}
                 >
-                  {item.tipe_riwayat == 2 ? 'Keluar' : 'Masuk'} :{' '}
-                  {item.qty_item}
+                  {item.tipe_riwayat == 2 ? 'Keluar' : 'Masuk'}: {item.qty_item}
                   <div className="mt-2 text-sm">
                     Tanggal: {new Date(item.created_at).toLocaleDateString()}
                   </div>

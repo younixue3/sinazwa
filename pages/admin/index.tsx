@@ -88,7 +88,7 @@ export default function Inventaris() {
                             <td
                               className={`px-4 py-3 text-center font-semibold ${getStatusColor(item.tipe_riwayat)}`}
                             >
-                              {item.tipe_riwayat === "1"
+                              {item.tipe_riwayat === "2"
                                 ? 'Jumlah Keluar'
                                 : 'Jumlah Masuk'}
                             </td>
