@@ -40,8 +40,8 @@ export function LaporanInventory() {
   return (
     <ModalComponent
       color={'btn-success text-xs w-full'}
-      text={'Laporan Inventory'}
-      title="Laporan Inventory"
+      text={'Laporan Delivery'}
+      title="Laporan Delivery"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={'grid grid-cols-1 gap-3'}>
