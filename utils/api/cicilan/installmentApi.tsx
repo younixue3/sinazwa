@@ -45,6 +45,11 @@ const statusPegawai = async (id, payload ) => {
   return result.data;
 };
 
+const getHistoryInstallment = async () => {
+  const result = await hitApi().get('/history-instalment');
+  return result.data;
+}
+
 export {
   getInstallment,
   getDetailInstallment,
@@ -54,5 +59,6 @@ export {
   deleteInstallment,
   getLastInstallment,
   resetInstallments,
-  statusPegawai
+  statusPegawai,
+  getHistoryInstallment
 };
