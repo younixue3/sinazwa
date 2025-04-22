@@ -7,6 +7,10 @@ import useGetInstallment from 'utils/api/cicilan/use-get-instalment';
 import { Each } from 'helper/Each';
 import CardComponent from 'components/Card/CardComponent';
 import useGetHistoryInstallment from 'utils/api/cicilan/use-get-history-installment';
+import Swal from 'sweetalert2';
+import { useQueryClient } from 'react-query';
+import SwalErrors from 'helper/swal-errors';
+import useDeleteHistoryInstallment from 'utils/api/cicilan/use-delete-history-installment';
 
 export default function Produksi() {
   const [id, setId] = useState();
@@ -14,12 +18,46 @@ export default function Produksi() {
   const [installmentSearchTerm, setInstallmentSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [filteredInstallments, setFilteredInstallments] = useState([]);
-
+  
+  const queryClient = useQueryClient();
   const GetInstallment = useGetInstallment();
   const historyInstallments = useGetHistoryInstallment();
+  const deleteHistoryMutation = useDeleteHistoryInstallment();
 
   const activeInstallments = GetInstallment?.data || [];
 
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Apakah anda yakin?',
+      text: 'Riwayat produksi yang dipilih akan dihapus!',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Tidak',
+      confirmButtonText: 'Ya!',
+      confirmButtonColor: '#3085d6'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteHistoryMutation.mutate(id, {
+          onSuccess: () => {
+            queryClient.invalidateQueries(useGetHistoryInstallment.keys());
+            Swal.fire({
+              title: 'Berhasil!',
+              text: 'Riwayat produksi berhasil dihapus.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+          },
+          onError: (err: any) => {
+            const errors = err.response?.data;
+            SwalErrors({ errors });
+          }
+        });
+      }
+    });
+  };
+  
   // Filter active installments based on search term
   useEffect(() => {
     if (GetInstallment.data) {
@@ -122,6 +160,14 @@ export default function Produksi() {
                       })}
                     </p>
                   </div>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className={
+                      'py-2 w-[90%] my-1 bg-red-500 hover:bg-red-600 text-center text-white mx-4 '
+                    }
+                  >
+                    Hapus
+                  </button>
                 </CardComponent>
               )}
             />

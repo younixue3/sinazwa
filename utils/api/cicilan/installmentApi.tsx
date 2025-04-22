@@ -50,6 +50,10 @@ const getHistoryInstallment = async () => {
   return result.data;
 }
 
+const deleteHistoryInstallment = async id => {
+  const result = await hitApi().delete(`/delete-history-instalment/${id}`);
+  return result.data;
+}
 export {
   getInstallment,
   getDetailInstallment,
@@ -60,5 +64,6 @@ export {
   getLastInstallment,
   resetInstallments,
   statusPegawai,
-  getHistoryInstallment
+  getHistoryInstallment,
+  deleteHistoryInstallment
 };
