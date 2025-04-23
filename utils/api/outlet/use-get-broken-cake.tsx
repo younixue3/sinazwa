@@ -18,10 +18,12 @@ const useGetBrokenCake = () => {
         qty_cooking_cake: broken_cake.qty_cooking_cake,
         destination_id: broken_cake.destination_id,
         description: broken_cake.description,
-        destination: broken_cake.destination
+        destination: broken_cake.destination,
+        category_cake: broken_cake.category_cake.name,
       }));
     }
   });
+  console.log(query);
   return query;
 };
 

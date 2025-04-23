@@ -35,6 +35,10 @@ const deleteOutlet = async id => {
   return result.data;
 };
 
+const deleteBrokenCake = async id => {
+  const result = await hitApi().delete(`/delete-broken-cake/${id}`);
+  return result.data;
+};
 export {
   getOutlet,
   deleteOutlet,
@@ -42,5 +46,6 @@ export {
   storeOutlet,
   getBrokenCake,
   storeBrokenCake,
-  updateOutlet
+  updateOutlet,
+  deleteBrokenCake,
 };

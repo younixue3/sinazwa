@@ -4,14 +4,19 @@ import OutletLayout from 'pages/outlet/OutletLayout';
 import useGetBrokenCake from 'utils/api/outlet/use-get-broken-cake';
 import { useState } from 'react';
 import useGetDestination from 'utils/api/destination/use-get-destination';
+import Swal from 'sweetalert2';
+import useDeleteBrokenCake from 'utils/api/outlet/use-delete-broken-cake';
+import SwalErrors from 'helper/swal-errors';
 
 export default function KueRusak() {
   const { data: brokenCakes, isLoading } = useGetBrokenCake();
   const { data: destinations } = useGetDestination({ isSelect: true });
   const [searchDate, setSearchDate] = useState('');
   const [searchDestination, setSearchDestination] = useState('');
+  const [searchCategory, setSearchCategory] = useState('');
   const [appliedDate, setAppliedDate] = useState('');
   const [appliedDestination, setAppliedDestination] = useState('');
+  const deleteBrokenCake = useDeleteBrokenCake({});
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -28,19 +33,67 @@ export default function KueRusak() {
     setAppliedDestination(searchDestination);
   };
 
-  const filteredCakes = brokenCakes?.filter(cake => {
-    const cakeDate = new Date(cake.date).toISOString().split('T')[0];
-    return (
-      (appliedDate === '' || cakeDate === appliedDate) &&
-      (appliedDestination === '' || cake.destination_id == appliedDestination)
+  const filteredCakes = brokenCakes
+    ?.filter(cake => {
+      const cakeDate = new Date(cake.date).toISOString().split('T')[0];
+      return (
+        (appliedDate === '' || cakeDate === appliedDate) &&
+        (appliedDestination === '' || cake.destination_id == appliedDestination)
+      );
+    })
+    ?.filter(cake =>
+      searchCategory === '' ||
+      (cake.category_cake &&
+        cake.category_cake.toLowerCase().includes(searchCategory.toLowerCase()))
     );
-  });
+
+    const handleDelete = (id) => {
+      Swal.fire({
+        title: 'Apakah anda yakin?',
+        text: 'Riwayat produksi yang dipilih akan dihapus!',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Tidak',
+        confirmButtonText: 'Ya!',
+        confirmButtonColor: '#3085d6'
+      }).then((result) => {
+        if(result.isConfirmed){
+          deleteBrokenCake.mutate(id, {
+            onSuccess: () => {
+              Swal.fire({
+                title: 'Berhasil!',
+                text: 'Riwayat produksi telah dihapus.',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+              }).then(() => {
+                window.location.reload();
+              });
+            },
+            onError: (err: any) => {
+            const errors = err.response?.data;
+            SwalErrors({ errors });
+          }
+          })
+        }
+      })
+    }
 
   return (
     <OutletLayout>
       <section className="grid gap-5 p-3">
         <CreateKueRusak />
 
+        <div className="my-2">
+          <input
+            type="text"
+            id="categorySearch"
+            placeholder="Masukkan nama kategori kue"
+            className="shadow-sm py-4 px-2 fa-border focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            value={searchCategory}
+            onChange={e => setSearchCategory(e.target.value)}
+          />
+        </div>
         <CardComponent>
           <form onSubmit={handleSubmit} className="p-4">
             <div className="grid grid-cols-1 gap-4">
@@ -115,6 +168,12 @@ export default function KueRusak() {
                     {cake.destination.name}
                   </div>
                   <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-700">Jenis Kue:</span>
+                    <span className="font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full">
+                      {cake.category_cake}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-700">Kue Rusak:</span>
                     <span className="font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full">
                       {cake.qty_broken}
@@ -148,6 +207,8 @@ export default function KueRusak() {
                       </span>
                     </div>
                   )}
+                  <button onClick={() => handleDelete(cake.id)}
+                   className='bg-red-500 hover:bg-red600 w-[95%] mx-auto text-white hover:text-gray-300'>Hapus</button>
                 </div>
               </CardComponent>
             ))
