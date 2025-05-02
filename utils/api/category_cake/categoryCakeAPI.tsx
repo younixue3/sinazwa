@@ -11,7 +11,7 @@ const storeCategoryCake = async payload => {
 };
 
 const updateCategoryCake = async (id, payload) => {
-  const result = await hitApi().post(`/update-category-cake/${id}`, payload);
+  const result = await hitApi().put(`/update-category-cake/${id}`, payload);
   return result.data;
 };
 

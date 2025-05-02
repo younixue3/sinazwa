@@ -230,10 +230,7 @@ export const KueTableComponent = (data: any) => {
                         setCakeId(item.id);
                       }}
                     >
-                      <UpdateCake
-                        queryClient={queryClient}
-                        GetDetailCake={GetDetailCake}
-                      />
+                      <UpdateCake GetDetailCake={GetDetailCake} />
                     </ModalComponent>
                     <button
                       className={'btn-danger m-0'}

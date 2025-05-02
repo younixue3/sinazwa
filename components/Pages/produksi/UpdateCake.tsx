@@ -8,13 +8,18 @@ import InputComponent from 'components/Form/InputComponent';
 import ButtonComponent from 'components/Button/ButtonComponent';
 import useGetCake from 'utils/api/cake_production/use-get-cake';
 import useUpdateCake from 'utils/api/cake_production/use-update-cake';
+import useUpdateCategoryCake from '../../../utils/api/category_cake/use-update-category-cake';
+import queryClient from 'helper/queryClient';
+import useGetDetailCake from 'utils/api/cake_production/use-get-detail-cake';
 
-export function UpdateCake({ GetDetailCake, queryClient }) {
+export function UpdateCake({ GetDetailCake }) {
   const initialValue = GetDetailCake?.data?.data;
-  console.log(initialValue);
   const categoryCakesRef = useRef();
   const modalRef = useRef();
   const UpdateCake = useUpdateCake(initialValue?.id);
+  const UpdateCategoryCake = useUpdateCategoryCake(
+    initialValue?.category_cake.id
+  );
 
   const schema = yup.object({
     name: yup.string().required('Nama harus di isi.'),
@@ -43,17 +48,21 @@ export function UpdateCake({ GetDetailCake, queryClient }) {
 
     UpdateCake.mutate(payload, {
       onSuccess: () => {
-        queryClient.invalidateQueries(useGetCake.keys());
+        UpdateCategoryCake.mutate(payload, {
+          onSuccess: () => {
+            queryClient.invalidateQueries(useGetCake.keys());
 
-        Swal.fire({
-          title: 'Berhasil!',
-          text: 'Kue berhasil di ubah.',
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false
+            Swal.fire({
+              title: 'Berhasil!',
+              text: 'Kue berhasil di ubah.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+
+            reset();
+          }
         });
-
-        reset();
       },
       onError: (err: any) => {
         const errors = err.response.data;

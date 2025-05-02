@@ -25,7 +25,6 @@ const useGetCake = props => {
       }
     }
   });
-  console.log(query);
   return query;
 };
 
