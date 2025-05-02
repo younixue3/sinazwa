@@ -34,9 +34,10 @@ export function EditCake({ GetDetailCake, queryClient }) {
   const onSubmit = async form => {
     const userName = form.user_id?.label || '-';
     const jumlahKue = form.finish;
+    const categoryCake = initialValue.category_cake.name || '-';
     const result = await Swal.fire({
       title: 'Konfirmasi',
-      html: `<div>Staff: <b>${userName}</b></div><div>Jumlah Kue: <b>${jumlahKue}</b></div><div class='mt-2'>Apakah Anda yakin akan input jumlah stock kue?</div>`,
+      html: `<div>Nama Kue: <b>${categoryCake}</b></div><div>Staff: <b>${userName}</b></div><div>Jumlah Kue: <b>${jumlahKue}</b></div><div class='mt-2'>Apakah Anda yakin akan input jumlah stock kue?</div>`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Ya, Input!',
