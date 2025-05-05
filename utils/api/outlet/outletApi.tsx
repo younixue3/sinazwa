@@ -39,6 +39,11 @@ const deleteBrokenCake = async id => {
   const result = await hitApi().delete(`/delete-broken-cake/${id}`);
   return result.data;
 };
+
+const historySaleCake = async () => {
+  const result = await hitApi().get('/history-detail-sale');
+  return result.data;
+};
 export {
   getOutlet,
   deleteOutlet,
@@ -48,4 +53,5 @@ export {
   storeBrokenCake,
   updateOutlet,
   deleteBrokenCake,
+  historySaleCake
 };

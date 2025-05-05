@@ -23,7 +23,6 @@ const useGetBrokenCake = () => {
       }));
     }
   });
-  console.log(query);
   return query;
 };
 
