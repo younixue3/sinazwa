@@ -122,6 +122,12 @@ export default function Penyesuaian() {
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-700">Jenis Kue:</span>
+                    <span className="font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full">
+                      {cake.category_cake}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-700">Tanggal:</span>
                     <span className="text-blue-600 font-medium">
                       {formatDate(cake.date)}
