@@ -20,13 +20,11 @@ export const BotNavComponent: FC<BotNavComponentProps> = ({
   const currentUrl = router.pathname;
 
   return (
-    <div className={'h-full flex justify flex-col'}>
-      <div className={'overflow-y-scroll max-h-screen no-scrollbar pb-40'}>
-        {children}
-      </div>
+    <div className={'h-[93%] flex justify flex-col'}>
+      <div className={'overflow-y-scroll no-scrollbar h-full'}>{children}</div>
       <div
         className={
-          'w-full sm:max-w-[320px] flex shrink-0 h-20 justify-between bg-white border-t border-gray-300 overflow-auto no-scrollbar fixed bottom-0'
+          'w-full sm:max-w-[320px] flex h-20 justify-between bg-white border-t border-gray-300 overflow-auto no-scrollbar bottom-0'
         }
       >
         <Each
