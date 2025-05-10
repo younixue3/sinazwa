@@ -15,7 +15,7 @@ export default function OutletLayout({ children }: any) {
 
   return (
     <>
-      <div className={'h-screen relative min-h-screen max-h-screen background'}>
+      <div className={'h-full min-h-screen overflow-hidden background'}>
         <TopNavComponent title={'Outlet'} />
         <BotNavComponent
           page={[
@@ -38,7 +38,7 @@ export default function OutletLayout({ children }: any) {
           ]}
           icon={''}
         >
-          <div className={'h-full'}>{children}</div>
+          <div className={'h-full pb-20 md:pb-0'}>{children}</div>
         </BotNavComponent>
       </div>
     </>

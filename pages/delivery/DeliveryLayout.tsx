@@ -28,7 +28,7 @@ export default function DeliveryLayout({ children }: any) {
           ]}
           icon={''}
         >
-          <div className={'h-full'}>{children}</div>
+          <div className={'h-full pb-20'}>{children}</div>
         </BotNavComponent>
       </div>
     </>

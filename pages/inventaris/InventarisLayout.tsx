@@ -33,7 +33,7 @@ export default function InventarisLayout({ children }: any) {
           ]}
           icon={''}
         >
-          <div className={'h-full'}>{children}</div>
+          <div className={'h-full pb-20 md:pb-0'}>{children}</div>
         </BotNavComponent>
       </div>
     </>
