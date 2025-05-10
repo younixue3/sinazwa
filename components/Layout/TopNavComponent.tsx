@@ -13,7 +13,7 @@ export class TopNavComponent extends Component<TopNavComponentProps> {
     return (
       <div
         className={
-          'flex h-[7%] dark:bg-gray-800 dark:text-white bg-white gap-5 justify-between px-3 shadow-lg'
+          'flex h-14 dark:bg-gray-800 dark:text-white bg-white gap-5 justify-between px-3 shadow-lg'
         }
       >
         <div className={'text-xl flex'}>

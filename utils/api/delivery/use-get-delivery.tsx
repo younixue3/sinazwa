@@ -6,24 +6,17 @@ const useGetDelivery = () => {
     queryKey: useGetDelivery.keys(),
     queryFn: getDelivery,
     select: ({ data }) => {
-      return data
-        .sort((a, b) => {
-          // Sort by status_delivery, putting "PROSES" first
-          if (a.status_delivery === 'PROSES') return -1;
-          if (b.status_delivery === 'PROSES') return 1;
-          return 0;
-        })
-        .map((delivery, index) => ({
-          no: index + 1,
-          id: delivery.id,
-          destination: delivery.destination,
-          cake_production: delivery.cake_production.category_cake.name,
-          qty_cake: delivery.qty_cake,
-          box: delivery.box,
-          status_delivery: delivery.status_delivery,
-          date_delivery: delivery.date_delivery,
-          today_shipments_count: delivery.today_shipments_count
-        }));
+      return data.map((delivery, index) => ({
+        no: index + 1,
+        id: delivery.id,
+        destination: delivery.destination,
+        cake_production: delivery.cake_production.category_cake.name,
+        qty_cake: delivery.qty_cake,
+        box: delivery.box,
+        status_delivery: delivery.status_delivery,
+        date_delivery: delivery.date_delivery,
+        today_shipments_count: delivery.today_shipments_count
+      }));
     }
   });
   console.log(query);
