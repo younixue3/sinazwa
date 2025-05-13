@@ -9,10 +9,23 @@ import { updateDelivery } from 'utils/api/delivery/deliveryAPI';
 import { useQueryClient } from 'react-query';
 import Swal from 'sweetalert2';
 import SwalErrors from 'helper/swal-errors';
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { AUTH_ROLE } from 'utils/constants/cookies-keys';
+import useGetDestination from 'utils/api/destination/use-get-destination';
 
 export default function KueDatang() {
   const GetDelivery = useGetDelivery();
   const queryClient = useQueryClient();
+  const [userRole, setUserRole] = useState('');
+  const [selectedDestination, setSelectedDestination] = useState('');
+  const destinations = useGetDestination({ isSelect: true });
+
+  // Ambil role dari cookies
+  useEffect(() => {
+    const role = Cookies.get(AUTH_ROLE) || '';
+    setUserRole(role);
+  }, []);
 
   const handleValidation = async (item: any) => {
     const result = await Swal.fire({
@@ -48,12 +61,45 @@ export default function KueDatang() {
     }
   };
 
+  // Handler untuk perubahan select
+  const handleDestinationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDestination(e.target.value);
+  };
+
+  // Filter data berdasarkan destinasi yang dipilih
+  const filteredData = GetDelivery.data?.filter(item => {
+    if (!selectedDestination || userRole !== 'admin') return true;
+    return item.destination.id.toString() === selectedDestination;
+  });
+
   return (
     <OutletLayout>
+      {/* Tampilkan filter select hanya jika user adalah admin */}
+      {userRole === 'admin' && (
+        <div className="p-3 pb-0">
+          <div className="mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Filter berdasarkan Outlet
+            </label>
+            <select
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+              value={selectedDestination}
+              onChange={handleDestinationChange}
+            >
+              <option value="">Pilih Outlet</option>
+              {destinations.data?.map((destination) => (
+                <option key={destination.value} value={destination.value}>
+                  {destination.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
       <section className={'grid gap-5 p-3'}>
-        {!GetDelivery.isLoading && GetDelivery.data?.length > 0 ? (
+        {!GetDelivery.isLoading && filteredData?.length > 0 ? (
           <Each
-            of={GetDelivery.data}
+            of={filteredData}
             render={(item: any) => (
               <CardComponent title={item.destination.name}>
                 <div className={'p-3'}>
