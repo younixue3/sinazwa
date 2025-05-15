@@ -2,15 +2,22 @@ import { TopNavComponent } from 'components/Layout/TopNavComponent';
 import { BotNavComponent } from 'components/Layout/BotNavComponent';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AUTH_ROLE } from 'utils/constants/cookies-keys';
 
 export default function ProduksiLayout({ children }: any) {
   const router = useRouter();
+  const [role, setRole] = useState<string>();
 
   useEffect(() => {
     if (!Cookies.get('auth_token')) {
       router.push('/login');
     }
+  }, []);
+
+  useEffect(() => {
+    const authRole = decodeURI(Cookies.get(AUTH_ROLE) || '');
+    setRole(authRole);
   }, []);
 
   return (
@@ -20,11 +27,15 @@ export default function ProduksiLayout({ children }: any) {
         <BotNavComponent
           page={[
             { url: '/produksi', icon: 'faHouse', title: 'Produksi' },
-            {
-              url: '/produksi/kue-masuk',
-              icon: 'faRightToBracket',
-              title: 'Kue Masuk'
-            }
+            ...(role !== 'delivery'
+              ? [
+                  {
+                    url: '/produksi/kue-masuk',
+                    icon: 'faRightToBracket',
+                    title: 'Kue Masuk'
+                  }
+                ]
+              : [])
           ]}
           icon={''}
         >

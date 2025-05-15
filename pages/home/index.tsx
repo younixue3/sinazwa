@@ -53,24 +53,57 @@ export default function Home() {
   const MenuItem = ({ href, icon, color, label }: MenuItemProps) => (
     <Link href={href} className="flex flex-col group">
       <div className="h-14 w-14 flex text-center dark:bg-gray-600 bg-white rounded-md dark:border-gray-400 border-2 shadow-md group-focus:border-green-400 m-auto p-2">
-        <FontAwesomeIcon className={`m-auto text-2xl text-${color}`} icon={icon} />
+        <FontAwesomeIcon
+          className={`m-auto text-2xl text-${color}`}
+          icon={icon}
+        />
       </div>
       <p className="text-xs text-center w-full h-8 mt-1 leading-4">{label}</p>
     </Link>
   );
 
   const adminMenuItems = [
-    { href: '/inventaris', icon: faBox, color: 'green-500', label: 'Inventaris' },
-    { href: '/produksi', icon: faCookieBite, color: 'blue-500', label: 'Produksi' },
+    {
+      href: '/inventaris',
+      icon: faBox,
+      color: 'green-500',
+      label: 'Inventaris'
+    },
+    {
+      href: '/produksi',
+      icon: faCookieBite,
+      color: 'blue-500',
+      label: 'Produksi'
+    },
     { href: '/delivery', icon: faTruck, color: 'red-500', label: 'Dropship' },
-    { href: '/outlet', icon: faHouseChimney, color: 'amber-500', label: 'Outlet' },
-    { href: '/kasir', icon: faCashRegister, color: 'indigo-500', label: 'Kasir' },
+    {
+      href: '/outlet',
+      icon: faHouseChimney,
+      color: 'amber-500',
+      label: 'Outlet'
+    },
+    {
+      href: '/kasir',
+      icon: faCashRegister,
+      color: 'indigo-500',
+      label: 'Kasir'
+    },
     { href: '/admin', icon: faUserTie, color: 'purple-500', label: 'Admin' }
   ];
 
   const sellerMenuItems = [
-    { href: '/outlet', icon: faHouseChimney, color: 'amber-500', label: 'Outlet' },
-    { href: '/kasir', icon: faCashRegister, color: 'indigo-500', label: 'Kasir' }
+    {
+      href: '/outlet',
+      icon: faHouseChimney,
+      color: 'amber-500',
+      label: 'Outlet'
+    },
+    {
+      href: '/kasir',
+      icon: faCashRegister,
+      color: 'indigo-500',
+      label: 'Kasir'
+    }
   ];
 
   const AuthMenu = () => {
@@ -78,11 +111,30 @@ export default function Home() {
 
     switch (role) {
       case 'admin':
-        return <>{adminMenuItems.map((item, index) => <MenuItem key={index} {...item} />)}</>;
+        return (
+          <>
+            {adminMenuItems.map((item, index) => (
+              <MenuItem key={index} {...item} />
+            ))}
+          </>
+        );
       case 'produksi':
-        return <MenuItem href="/produksi" icon={faCookieBite} color="blue-500" label="Produksi" />;
+        return (
+          <MenuItem
+            href="/produksi"
+            icon={faCookieBite}
+            color="blue-500"
+            label="Produksi"
+          />
+        );
       case 'seller':
-        return <>{sellerMenuItems.map((item, index) => <MenuItem key={index} {...item} />)}</>;
+        return (
+          <>
+            {sellerMenuItems.map((item, index) => (
+              <MenuItem key={index} {...item} />
+            ))}
+          </>
+        );
       default:
         return null;
     }

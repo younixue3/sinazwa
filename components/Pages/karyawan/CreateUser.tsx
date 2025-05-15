@@ -60,7 +60,8 @@ export function CreateUser() {
   const job = useGetJob({ isSelect: true });
   const role = [
     { value: 'seller', label: 'Seller' },
-    { value: 'produksi', label: 'Produksi' }
+    { value: 'produksi', label: 'Produksi' },
+    { value: 'delivery', label: 'Delivery' }
   ];
 
   const onSubmit = form => {
