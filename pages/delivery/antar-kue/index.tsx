@@ -63,6 +63,7 @@ export default function DeliveryCake() {
     }
   };
 
+
   return (
     <DeliveryLayout>
       <section className="grid gap-5 p-3">
@@ -84,6 +85,7 @@ export default function DeliveryCake() {
                 <div className={'grid grid-cols-6 gap-2 p-3'}>
                   <div className={'col-span-6'}>Stock : {item.qty}</div>
                   <div className={'col-span-6'}>
+                  <p>Jumlah Box : {item.box}</p>
                   </div>
                 </div>
               </CardComponent>

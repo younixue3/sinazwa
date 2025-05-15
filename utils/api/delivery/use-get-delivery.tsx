@@ -19,7 +19,6 @@ const useGetDelivery = () => {
       }));
     }
   });
-  console.log(query);
   return query;
 };
 
