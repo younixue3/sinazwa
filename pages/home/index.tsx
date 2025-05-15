@@ -120,12 +120,20 @@ export default function Home() {
         );
       case 'produksi':
         return (
-          <MenuItem
-            href="/produksi"
-            icon={faCookieBite}
-            color="blue-500"
-            label="Produksi"
-          />
+          <>
+            <MenuItem
+              href="/produksi"
+              icon={faCookieBite}
+              color="blue-500"
+              label="Produksi"
+            />
+             <MenuItem
+              href="/delivery"
+              icon={faTruck}
+              color="blue-500"
+              label="Delivery"
+            />
+          </>
         );
       case 'seller':
         return (

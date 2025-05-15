@@ -24,6 +24,11 @@ export default function DeliveryLayout({ children }: any) {
               url: '/delivery/antar-kue',
               icon: 'faRightToBracket',
               title: 'Antar Kue'
+            },
+            {
+              url: '/delivery/antar-kue/rekap-antar-kue',
+              icon: 'faRightToBracket',
+              title: 'Rekap Antar Kue'
             }
           ]}
           icon={''}

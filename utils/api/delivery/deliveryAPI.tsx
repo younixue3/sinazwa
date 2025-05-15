@@ -30,11 +30,17 @@ const updateBox = async (id, payload) => {
   return result.data;
 };
 
+const getRekapAntarKue = async () => {
+  const result = await hitApi().get('/rekap-antar-kue');
+  return result.data;
+};
+
 export {
   getDelivery,
   getDetailDelivery,
   storeDelivery,
   updateDelivery,
   deleteDelivery,
-  updateBox
+  updateBox,
+  getRekapAntarKue,
 };

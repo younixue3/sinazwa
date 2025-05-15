@@ -51,6 +51,7 @@ export default function KueMasuk() {
               <CardComponent title={item.name}>
                 <div className={'grid grid-cols-6 gap-2 p-3'}>
                   <div className={'col-span-6'}>Stock : {item.qty}</div>
+                  <div className={'col-span-6'}>Jumlah Box : {item.box}</div>
                   <div className={'col-span-6'}>
                     <ModalComponent
                       text={'Tambah Stock'}

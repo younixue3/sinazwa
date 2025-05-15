@@ -51,7 +51,7 @@ export default function Outlet() {
                 <CardComponent
                   title={sale.cake_production[0].category_cake.name}
                 >
-                  <div className="p-3">
+                  <div className="p-3s">
                     <div className="flex relative gap-2">
                       <FontAwesomeIcon
                         className="text-xl m-auto mt-0 bg-gray-200 rounded p-3"
@@ -62,6 +62,8 @@ export default function Outlet() {
                           text={`Stok: ${sale.cakes_available} pcs`}
                           color="btn-primary text-xs ml-0"
                         />
+                        
+                        <p></p>
                       </div>
                     </div>
                   </div>

@@ -51,7 +51,7 @@ export function EditDelivery({ GetDetailDelivery, queryClient }) {
       value: initialValue?.destination.id,
       label: initialValue?.destination.name
     });
-  }, [initialValue]);
+  }, [initialValue, setValue]);
 
   const onSubmit = form => {
     let payload = {
