@@ -1,18 +1,37 @@
 import { useQueryClient } from 'react-query';
 import OutletLayout from 'pages/outlet/OutletLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCookie, faHistory, faCalendar, faMoneyBill, faTags, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faCookie, faHistory, faCalendar, faMoneyBill, faTags, faClock, faStore } from '@fortawesome/free-solid-svg-icons';
 import ButtonComponent from 'components/Button/ButtonComponent';
 import { Each } from 'helper/Each';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useGetSale from 'utils/api/sale/use-get-sale';
 import TabComponent from 'components/Layout/TabComponent';
 import CardComponent from 'components/Card/CardComponent';
 import useGetHistoryCakeSale from 'utils/api/outlet/use-get-history-sale-cake';
+import useGetOutlet from 'utils/api/outlet/use-get-outlet';
+import Cookies from 'js-cookie';
+import { AUTH_ROLE } from 'utils/constants/cookies-keys';
 
 export default function Outlet() {
   const { data: sales, isLoading } = useGetSale();
-  const {data: saleHistories, isLoading: isLoadingHistory} = useGetHistoryCakeSale();
+  const { data: saleHistories, isLoading: isLoadingHistory } = useGetHistoryCakeSale();
+  const { data: outlets } = useGetOutlet({});
+  const [userRole, setUserRole] = useState('');
+  const [selectedOutlet, setSelectedOutlet] = useState('');
+  const [selectedOutletId, setSelectedOutletId] = useState('');
+  
+  // Ambil role dari cookies
+  useEffect(() => {
+    const role = Cookies.get(AUTH_ROLE) || '';
+    setUserRole(role);
+  }, []);
+  
+  // Filter sales berdasarkan outlet yang dipilih (untuk admin)
+  const filteredSales = sales?.filter(item => {
+    if (userRole !== 'admin') return true;
+    return selectedOutlet && item.destination === selectedOutlet;
+  }) || [];
 
   const formatDateTime = (dateTimeString: string) => {
     if (!dateTimeString || dateTimeString === '-') return '-';
@@ -35,7 +54,7 @@ export default function Outlet() {
       
       return `${formattedDate} ${formattedTime}`;
     } catch (error) {
-      console.error('Error formatting date:', error);
+      // console.error('Error formatting date:', error);
       return dateTimeString;
     }
   };
@@ -44,36 +63,69 @@ export default function Outlet() {
     <OutletLayout>
       <TabComponent tab={['Outlet', 'Riwayat Penjualan']}>
         <section className="grid gap-5 p-3">
-          {!isLoading && sales?.length > 0 ? (
-            <Each
-              of={sales}
-              render={(sale: any) => (
-                <CardComponent
-                  title={sale.cake_production[0].category_cake.name}
-                >
-                  <div className="p-3s">
-                    <div className="flex relative gap-2">
-                      <FontAwesomeIcon
-                        className="text-xl m-auto mt-0 bg-gray-200 rounded p-3"
-                        icon={faCookie}
-                      />
-                      <div className="w-full flex flex-col gap-2">
-                        <ButtonComponent
-                          text={`Stok: ${sale.cakes_available} pcs`}
-                          color="btn-primary text-xs ml-0"
+          {/* Panel pemilihan outlet untuk admin */}
+          {userRole === 'admin' && (
+            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+              <label className="block mb-2 font-semibold text-gray-700">Pilih Outlet</label>
+              <select
+                className="border border-gray-300 rounded-lg p-2.5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                value={selectedOutletId}
+                onChange={e => {
+                  const outletId = e.target.value;
+                  setSelectedOutletId(outletId);
+                  const outletName = outlets?.find(outlet => outlet.id.toString() === outletId)?.name || '';
+                  setSelectedOutlet(outletName);
+                }}
+              >
+                <option value="">-- Pilih Outlet --</option>
+                {outlets?.map(outlet => (
+                  <option key={outlet.id} value={outlet.id.toString()}>
+                    {outlet.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          
+          {/* Pesan untuk admin jika belum memilih outlet */}
+          {userRole === 'admin' && !selectedOutlet ? (
+            <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-6 text-center flex flex-col items-center justify-center">
+              <FontAwesomeIcon icon={faStore} className="h-10 w-10 text-yellow-400 mb-3" />
+              <p className="text-gray-600">Silakan pilih outlet terlebih dahulu untuk melihat stok kue.</p>
+            </div>
+          ) : (
+            // Tampilkan daftar stok kue jika bukan admin atau admin sudah memilih outlet
+            !isLoading && filteredSales?.length > 0 ? (
+              <Each
+                of={filteredSales}
+                render={(sale: any) => (
+                  <CardComponent
+                    title={sale.cakes?.[0]?.category_name}
+                  >
+                    <div className="p-3s">
+                      <div className="flex relative gap-2">
+                        <FontAwesomeIcon
+                          className="text-xl m-auto mt-0 bg-gray-200 rounded p-3"
+                          icon={faCookie}
                         />
-                        
-                        <p></p>
+                        <div className="w-full flex flex-col gap-2">
+                          <ButtonComponent
+                            text={`Stok: ${sale.cakes_available} pcs`}
+                            color="btn-primary text-xs ml-0"
+                          />
+                          
+                          <p></p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardComponent>
-              )}
-            />
-          ) : (
-            <div className="text-center text-gray-500 py-8">
-              Tidak ada data stok
-            </div>
+                  </CardComponent>
+                )}
+              />
+            ) : (
+              <div className="text-center text-gray-500 py-8">
+                {userRole === 'admin' && selectedOutlet ? 'Tidak ada data stok untuk outlet ini' : 'Tidak ada data stok'}
+              </div>
+            )
           )}
         </section>
         <section className="grid gap-5 p-3">

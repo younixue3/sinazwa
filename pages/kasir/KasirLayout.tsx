@@ -15,21 +15,11 @@ export default function KasirLayout({ children }: any) {
 
   return (
     <>
-      <div className={'fullscreen top-0 left-0 overflow-hidden background'}>
-        <TopNavComponent title={'Kasir'} />
-        <BotNavComponent
-          page={[
-            { url: '/kasir', icon: 'faHouse', title: 'Kasir' },
-            {
-              url: '/kasir/riwayat-transaksi',
-              icon: 'faRightToBracket',
-              title: 'Riwayat Transaksi'
-            }
-          ]}
-          icon={''}
-        >
-          <div className={'h-full'}>{children}</div>
-        </BotNavComponent>
+      <div className={'fullscreen top-0 left-0 overflow-auto background'}>
+        <div className="fixed top-0 left-0 right-0 z-10">
+          <TopNavComponent title={'Kasir'} />
+        </div>
+        <div className={'h-full pt-14 mb-20'}>{children}</div>
       </div>
     </>
   );

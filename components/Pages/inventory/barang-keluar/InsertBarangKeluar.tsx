@@ -36,7 +36,7 @@ export function InsertBarangKeluar({ GetDetailBarang, queryClient }) {
 
 
   const onSubmit = form => {
-    console.log(form);
+    // console.log(form);
     const payload = {
       ...form,
       inventory_id: initialValue.id,

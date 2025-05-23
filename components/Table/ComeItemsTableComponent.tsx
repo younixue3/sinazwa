@@ -102,6 +102,7 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
       const searchFields = [
         item.code_nota,
         item.inventory.name,
+        item.name_distributor,
         item.description,
         item.status_payment
       ];
@@ -173,6 +174,9 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
               Code Nota
             </th>
             <th scope="col" className="px-6 py-3">
+              Nama Distributor
+            </th>
+            <th scope="col" className="px-6 py-3">
               Tanggal Masuk
             </th>
             <th scope="col" className="px-6 py-3">
@@ -220,6 +224,7 @@ export const ComeItemsTableComponent: React.FC<ComeItemsTableProps> = ({
                 </td>
                 <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
                 <td className="px-6 py-4">{item.code_nota}</td>
+                <td className="px-6 py-4">{item.name_distributor}</td>
                 <td className="px-6 py-4">{item.created_at}</td>
                 <td className="px-6 py-4">{item.expired_date}</td>
                 <td className="px-6 py-4">{item.inventory.name}</td>

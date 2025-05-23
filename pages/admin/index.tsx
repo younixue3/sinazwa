@@ -11,7 +11,7 @@ export default function Inventaris() {
 
   const { data: riwayatBarangs } = useDetailHistoryItem();
 
-  console.log(riwayatBarangs);
+  // console.log(riwayatBarangs);
 
   const totalPages = riwayatBarangs
     ? Math.ceil(riwayatBarangs.length / itemsPerPage)

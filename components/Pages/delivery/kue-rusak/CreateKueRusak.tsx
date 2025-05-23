@@ -99,7 +99,7 @@ export function CreateKueRusak() {
 
         Swal.fire({
           title: 'Berhasil!',
-          text: 'Kue Rusak berhasil di buat.',
+          text: 'Rekap Harian berhasil di buat.',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false
@@ -117,8 +117,8 @@ export function CreateKueRusak() {
 
   return (
     <ModalComponent
-      text={'Input Kue Rusak'}
-      title={'Input Kue Rusak'}
+      text={'Input Rekap Harian'}
+      title={'Input Rekap Harian'}
       color={'btn-success text-xs w-full'}
     >
       <form onSubmit={handleSubmit(onSubmit)}>

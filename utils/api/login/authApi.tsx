@@ -25,7 +25,7 @@ const logoutUser = async () => {
 
     return result;
   } catch (e) {
-    console.log(e.response);
+    // console.log(e.response);
   }
 };
 

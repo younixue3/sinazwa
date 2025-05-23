@@ -21,7 +21,7 @@ const RekapAntarKuePage = () => {
     : [];
 
   useEffect(() => {
-    console.log('Data Rekap Antar Kue:', getRekapAntarKue.data);
+    // console.log('Data Rekap Antar Kue:', getRekapAntarKue.data);
   }, [getRekapAntarKue.data]);
 
   // Filter data berdasarkan destination dan category

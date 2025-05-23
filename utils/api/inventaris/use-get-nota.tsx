@@ -31,6 +31,7 @@ interface NotaItem {
 interface NotaData {
   id: number;
   code_nota: string;
+  name_distributor:string;
   delivery_date: string;
   created_at: string;
   expired_date: string;
@@ -51,6 +52,7 @@ const useGetNota = () => {
         return {
           no: index + 1,
           id: nota.id,
+          name_distributor: nota.name_distributor,
           code_nota: nota.code_nota,
           created_at: nota.delivery_date,
           expired_date: nota.expired_date,

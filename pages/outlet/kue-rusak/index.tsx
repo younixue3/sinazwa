@@ -157,7 +157,7 @@ export default function KueRusak() {
           ) : filteredCakes?.length === 0 ? (
             <CardComponent>
               <div className="text-center text-gray-600 py-4">
-                Tidak ada kue rusak ditemukan
+                Tidak ada data rekap Harian
               </div>
             </CardComponent>
           ) : (

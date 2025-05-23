@@ -6,14 +6,24 @@ const useGetSale = () => {
     queryKey: useGetSale.keys(),
     queryFn: getSale,
     select: ({ data }) => {
-      return data[0].sales.map((sale, index) => ({
+      return data.map((sale, index) => ({
         no: index + 1,
-        id: sale.id,
-        cake_production: sale.cake_production,
-        cakes_available: sale.cakes_available
+        id: sale.sale_id,
+        destination: sale.destination,
+        destination_id: sale.destination_id,
+        cakes_available: sale.cakes_available,
+        cakes: sale.cakes.map((cake) => ({
+          cake_id: cake.cake_id,
+          category_name: cake.category_name,
+          price: cake.price,
+          qty: cake.qty
+        }))
       }));
-    }
+    },
+    refetchInterval: 3000, // <- Tambahkan ini (dalam milidetik, contoh: 3000ms = 3 detik)
+    refetchOnWindowFocus: true, // Optional: refetch saat window di-focus kembali
   });
+
   return query;
 };
 

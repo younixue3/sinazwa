@@ -28,7 +28,7 @@ export default function OutletLayout({ children }: any) {
             {
               url: '/outlet/kue-rusak',
               icon: 'faRightFromBracket',
-              title: 'Kue Rusak'
+              title: 'Rekap Harian'
             },
             {
               url: '/outlet/penyesuaian',

@@ -26,7 +26,7 @@ const PegawaiList = ({ pegawai }: { pegawai: { id: number; aktif: number }[] }) 
         showConfirmButton: false,
       });
     } catch (error) {
-      console.error("Error updating status pegawai:", error);
+      // console.error("Error updating status pegawai:", error);
 
       Swal.fire({
         title: "Gagal!",

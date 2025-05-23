@@ -18,7 +18,7 @@ export function EditInstallment({
   const initialValue = GetDetailInstallment?.data?.data;
   const UpdateInstallment = useUpdateInstallment(initialValue?.id);
   const userRef = useRef();
-  console.log(initialValue);
+  // console.log(initialValue);
 
   const schema = yup.object({
     daily_installments: yup.number().required('Cicilan Harian harus di isi.'),
