@@ -106,6 +106,21 @@ export default function Home() {
     }
   ];
 
+  // const DeliveryMenuItems = [
+  //   {
+  //     href: '/delivery',
+  //     icon: faHouseChimney,
+  //     color: 'amber-500',
+  //     label: 'Outlet'
+  //   },
+  //   {
+  //     href: '/produksi',
+  //     icon: faCashRegister,
+  //     color: 'indigo-500',
+  //     label: 'Kasir'
+  //   }
+  // ];
+
   const AuthMenu = () => {
     if (!role) return null;
 
@@ -119,6 +134,23 @@ export default function Home() {
           </>
         );
       case 'produksi':
+        return (
+          <>
+            <MenuItem
+              href="/produksi"
+              icon={faCookieBite}
+              color="blue-500"
+              label="Produksi"
+            />
+             <MenuItem
+              href="/delivery"
+              icon={faTruck}
+              color="blue-500"
+              label="Delivery"
+            />
+          </>
+        );
+        case 'delivery':
         return (
           <>
             <MenuItem
