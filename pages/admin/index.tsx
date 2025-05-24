@@ -4,14 +4,14 @@ import AccordionComponent from 'components/Accordion/AccordionComponent';
 import { useState } from 'react';
 import useGetHistoryBarang from 'utils/api/inventaris/use-get-history-barang';
 import useDetailHistoryItem from 'utils/api/inventaris/use-detail-history-item';
+import ButtonComponent from 'components/Button/ButtonComponent';
+import { ReportingInventory } from 'components/Pages/admin/ReportingInventory';
 
 export default function Inventaris() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   const { data: riwayatBarangs } = useDetailHistoryItem();
-
-  // console.log(riwayatBarangs);
 
   const totalPages = riwayatBarangs
     ? Math.ceil(riwayatBarangs.length / itemsPerPage)
@@ -26,7 +26,7 @@ export default function Inventaris() {
   const handleNextPage = () => setCurrentPage(p => Math.min(totalPages, p + 1));
 
   const getStatusColor = (tipeRiwayat: string) =>
-    tipeRiwayat === "2"
+    tipeRiwayat === '2'
       ? 'bg-emerald-100 hover:bg-emerald-200'
       : 'bg-amber-100 hover:bg-amber-200';
 
@@ -44,11 +44,15 @@ export default function Inventaris() {
         </div>
       </main>
       <div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <div className="bg-white border border-2 shadow-xl rounded-md mx-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-20">
+          <div className="bg-white border shadow-xl rounded-md mx-4">
             <p className="text-2xl font-semibold text-center my-4">
               Riwayat Inventory
             </p>
+            {/* Ganti ButtonComponent dengan ReportingInventory */}
+            <div className="ms-4">
+              <ReportingInventory />
+            </div>
             <section className="space-y-4 p-4">
               {riwayatBarangs && (
                 <div>
@@ -88,7 +92,7 @@ export default function Inventaris() {
                             <td
                               className={`px-4 py-3 text-center font-semibold ${getStatusColor(item.tipe_riwayat)}`}
                             >
-                              {item.tipe_riwayat === "2"
+                              {item.tipe_riwayat === '2'
                                 ? 'Jumlah Keluar'
                                 : 'Jumlah Masuk'}
                             </td>
