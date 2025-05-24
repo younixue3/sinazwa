@@ -17,6 +17,11 @@ const storeSale = async payload => {
   return result.data;
 };
 
+const getSaleById = async id => {
+  const result = await hitApi().get(`/edit-sale/${id}`);
+  return result.data;
+};
+
 const updateSale = async (id, payload) => {
   const result = await hitApi().put(`/update-sale/${id}`, payload);
   return result.data;
@@ -27,4 +32,4 @@ const deleteSale = async id => {
   return result.data;
 };
 
-export { getSale, getDetailSale, storeSale, updateSale, deleteSale };
+export { getSale, getDetailSale, storeSale, updateSale, deleteSale, getSaleById };

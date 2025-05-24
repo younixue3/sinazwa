@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBox,
+  faCashRegister,
   faClapperboard,
   faCookie,
   faPiggyBank,
@@ -158,6 +159,20 @@ export class SidebarComponent extends Component<SidebarProps> {
                     icon={faPiggyBank}
                   />
                   <span className="ml-3">Cicilan Karyawan</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/kasir"
+                  className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                >
+                  <FontAwesomeIcon
+                    className={
+                      'w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'
+                    }
+                    icon={faCashRegister}
+                  />
+                  <span className="ml-3">Kasir</span>
                 </Link>
               </li>
             </ul>
