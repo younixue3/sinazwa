@@ -149,7 +149,7 @@ export const UserTableComponent = (data: any) => {
                   <div className={'flex gap-2'}>
                     <ModalComponent
                       text={<FontAwesomeIcon icon={faEdit} />}
-                      title={'Kurangi Stock'}
+                      title={'Update Data User'}
                       color={'btn-warning m-0'}
                       onClick={() => {
                         setJobId(item.id);
