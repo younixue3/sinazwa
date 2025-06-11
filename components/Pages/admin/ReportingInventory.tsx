@@ -47,7 +47,6 @@ export function ReportingInventory() {
         window.open(URL.createObjectURL(response.data));
       })
       .catch(error => {
-        console.error('Error downloading report:', error);
         alert('Terjadi kesalahan saat mengunduh laporan.');
       });
   };

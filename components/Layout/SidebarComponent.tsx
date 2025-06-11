@@ -79,6 +79,20 @@ export class SidebarComponent extends Component<SidebarProps> {
               </li>
               <li>
                 <Link
+                  href="/admin/outlet-expenses"
+                  className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                >
+                  <FontAwesomeIcon
+                    className={
+                      'w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'
+                    }
+                    icon={faShop}
+                  />
+                  <span className="ml-3">Pengeluaran outlet</span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/admin/dropship"
                   className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                 >

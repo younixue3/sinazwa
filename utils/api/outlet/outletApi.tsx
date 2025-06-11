@@ -44,6 +44,31 @@ const historySaleCake = async () => {
   const result = await hitApi().get('/history-detail-sale');
   return result.data;
 };
+
+const storeOutletExpenses = async payload => {
+  const result = await hitApi().post('/outlet-expenses', payload);
+  return result.data;
+};
+
+const getOutletExpenses = async() => {
+  const result = await hitApi().get('/outlet-expenses');
+  return result.data;
+};
+const getOutletExpensesById = async id => {
+  const result = await hitApi().get(`/edit-outlet-expenses/${id}`);
+  return result.data;
+};
+
+const updateOutletExpenses = async (id, payload) => {
+  const result = await hitApi().put(`/update-outlet-expenses/${id}`, payload);
+  return result.data;
+}
+
+const deleteOutletExpenses = async id => {
+  const result = await hitApi().delete(`/delete-outlet-expenses/${id}`);
+  return result.data;
+}
+
 export {
   getOutlet,
   deleteOutlet,
@@ -53,5 +78,10 @@ export {
   storeBrokenCake,
   updateOutlet,
   deleteBrokenCake,
-  historySaleCake
+  historySaleCake,
+  storeOutletExpenses,
+  getOutletExpenses,
+  getOutletExpensesById,
+  updateOutletExpenses,
+  deleteOutletExpenses
 };

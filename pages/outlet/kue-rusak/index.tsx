@@ -2,11 +2,15 @@ import CardComponent from 'components/Card/CardComponent';
 import { CreateKueRusak } from 'components/Pages/delivery/kue-rusak/CreateKueRusak';
 import OutletLayout from 'pages/outlet/OutletLayout';
 import useGetBrokenCake from 'utils/api/outlet/use-get-broken-cake';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import useGetDestination from 'utils/api/destination/use-get-destination';
 import Swal from 'sweetalert2';
 import useDeleteBrokenCake from 'utils/api/outlet/use-delete-broken-cake';
 import SwalErrors from 'helper/swal-errors';
+import { ModalComponent } from 'components/Modal/ModalComponent';
+import OutletExpenseForm from 'components/Pages/outlet/OutletExpenseForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
 
 export default function KueRusak() {
   const { data: brokenCakes, isLoading } = useGetBrokenCake();
@@ -17,6 +21,7 @@ export default function KueRusak() {
   const [appliedDate, setAppliedDate] = useState('');
   const [appliedDestination, setAppliedDestination] = useState('');
   const deleteBrokenCake = useDeleteBrokenCake({});
+  const modalRef = useRef<any>();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -47,42 +52,64 @@ export default function KueRusak() {
         cake.category_cake.toLowerCase().includes(searchCategory.toLowerCase()))
     );
 
-    const handleDelete = (id) => {
-      Swal.fire({
-        title: 'Apakah anda yakin?',
-        text: 'Riwayat produksi yang dipilih akan dihapus!',
-        icon: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Tidak',
-        confirmButtonText: 'Ya!',
-        confirmButtonColor: '#3085d6'
-      }).then((result) => {
-        if(result.isConfirmed){
-          deleteBrokenCake.mutate(id, {
-            onSuccess: () => {
-              Swal.fire({
-                title: 'Berhasil!',
-                text: 'Riwayat produksi telah dihapus.',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-              }).then(() => {
-                window.location.reload();
-              });
-            },
-            onError: (err: any) => {
+  const handleDelete = (id: any) => {
+    Swal.fire({
+      title: 'Apakah anda yakin?',
+      text: 'Riwayat produksi yang dipilih akan dihapus!',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Tidak',
+      confirmButtonText: 'Ya!',
+      confirmButtonColor: '#3085d6'
+    }).then((result) => {
+      if(result.isConfirmed){
+        deleteBrokenCake.mutate(id, {
+          onSuccess: () => {
+            Swal.fire({
+              title: 'Berhasil!',
+              text: 'Riwayat produksi telah dihapus.',
+              icon: 'success',
+              confirmButtonText: 'Ok'
+            }).then(() => {
+              window.location.reload();
+            });
+          },
+          onError: (err: any) => {
             const errors = err.response?.data;
             SwalErrors({ errors });
           }
-          })
-        }
-      })
+        })
+      }
+    })
+  }
+
+  const handleExpenseSuccess = () => {
+    if (modalRef.current) {
+      modalRef.current.modalToggle();
     }
+  };
 
   return (
     <OutletLayout>
       <section className="grid gap-5 p-3">
         <CreateKueRusak />
+
+        {/* Button untuk membuka modal pengeluaran */}
+        <div className="">
+          <ModalComponent
+            ref={modalRef}
+            text={
+              <div className=" space-x-2">
+                <span>Tambah Pengeluaran</span>
+              </div>
+            }
+            color="w-full bg-red-600 hover:bg-red-800 text-xs text-white"
+            title="Pengeluaran Outlet"
+          >
+            <OutletExpenseForm onSuccess={handleExpenseSuccess} />
+          </ModalComponent>
+        </div>
 
         <div className="my-2">
           <input
@@ -94,6 +121,7 @@ export default function KueRusak() {
             onChange={e => setSearchCategory(e.target.value)}
           />
         </div>
+        
         <CardComponent>
           <form onSubmit={handleSubmit} className="p-4">
             <div className="grid grid-cols-1 gap-4">
@@ -208,7 +236,7 @@ export default function KueRusak() {
                     </div>
                   )}
                   <button onClick={() => handleDelete(cake.id)}
-                   className='bg-red-500 hover:bg-red600 w-[95%] mx-auto text-white hover:text-gray-300'>Hapus</button>
+                   className='bg-red-500 hover:bg-red-600 w-[95%] mx-auto text-white hover:text-gray-300 py-2 rounded'>Hapus</button>
                 </div>
               </CardComponent>
             ))

@@ -14,6 +14,8 @@ export default function Laporan() {
   const GetOutlet = useGetOutlet({ isSelect: false });
   var today = new Date();
   const [destinationId, setDestinationId] = useState();
+  const [showFormatModal, setShowFormatModal] = useState(false);
+  const [selectedOutletId, setSelectedOutletId] = useState(null);
 
   function formatDate(date) {
     var d = new Date(date),
@@ -27,6 +29,21 @@ export default function Laporan() {
     return [year, month, day].join('-');
   }
 
+  const handleDailyReport = (outletId, format) => {
+    getDailyReporting({
+      date: formatDate(today),
+      download: format,
+      destination_id: outletId
+    });
+    setDestinationId(outletId);
+    setShowFormatModal(false);
+  };
+
+  const openFormatModal = (outletId) => {
+    setSelectedOutletId(outletId);
+    setShowFormatModal(true);
+  };
+
   return (
     <AdminLayout>
       <main className={'p-4 grid grid-cols-4 gap-3'}>
@@ -37,16 +54,7 @@ export default function Laporan() {
               <CardComponent title={item.name}>
                 <div className="flex gap-3 p-5">
                   <ButtonComponent
-                    onClick={() => {
-                      getDailyReporting({
-                        date: formatDate(today),
-                        download: 'pdf',
-                        destination_id: item.id
-                      });
-                      setDestinationId(item.id);
-                      // setDestinationId(null);
-                      // dateReporting(item.id);
-                    }}
+                    onClick={() => openFormatModal(item.id)}
                     text="Harian"
                     color="btn-primary w-full"
                   ></ButtonComponent>
@@ -60,14 +68,36 @@ export default function Laporan() {
                       DestinationId={destinationId}
                     ></ReportLaporan>
                   </ModalComponent>
-                  {/* <ButtonComponent
-                    text="Laporan"
-                    color="btn-primary w-full"
-                  ></ButtonComponent> */}
                 </div>
               </CardComponent>
             )}
           />
+        )}
+        
+        {/* Modal untuk pilihan format download */}
+        {showFormatModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-80">
+              <h3 className="text-lg font-semibold mb-4">Pilih Format Download</h3>
+              <div className="space-y-3">
+                <ButtonComponent
+                  onClick={() => handleDailyReport(selectedOutletId, 'pdf')}
+                  text="Download PDF"
+                  color="btn-primary w-full"
+                />
+                <ButtonComponent
+                  onClick={() => handleDailyReport(selectedOutletId, 'excel')}
+                  text="Download Excel"
+                  color="btn-success w-full"
+                />
+                <ButtonComponent
+                  onClick={() => setShowFormatModal(false)}
+                  text="Batal"
+                  color="btn-secondary w-full"
+                />
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </AdminLayout>

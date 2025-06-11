@@ -13,9 +13,11 @@ import useGetSale from 'utils/api/sale/use-get-sale';
 import useGetOutlet from 'utils/api/outlet/use-get-outlet';
 import { AUTH_ROLE } from 'utils/constants/cookies-keys';
 import toRupiah from 'utils/helpers/number';
+import { getDailyReporting } from 'utils/api/reporting/reportingApi';
 
 const schema = yup.object({
-  recieved_money: yup.string().required('Jumlah Uang harus di isi.')
+  recieved_money: yup.string().required('Jumlah Uang harus di isi.'),
+  description: yup.string().optional()
 });
 
 export default function KasirPage() {
@@ -136,10 +138,10 @@ export default function KasirPage() {
       .map(item => ({
         category_cake_id: item.category_cake_id,
         cake_selling: item.qty,
+        description: data.description || '', // Pindahkan description ke dalam setiap item
         ...(userRole === 'admin' &&
           selectedOutletId && { destination_id: selectedOutletId })
       }));
-
     if (payload.length === 0) {
       Swal.fire(
         'Peringatan',
@@ -149,7 +151,7 @@ export default function KasirPage() {
       return;
     }
 
-    // Tambahkan destination_id ke payload jika admin
+    // Struktur final payload tanpa description di root level
     const finalPayload = {
       payload,
       ...(userRole === 'admin' &&
@@ -161,6 +163,7 @@ export default function KasirPage() {
         Swal.fire('Sukses', 'Pembayaran berhasil!', 'success');
         setCounts(counts.map(item => ({ ...item, qty: 0 })));
         setValue('recieved_money', '');
+        setValue('description', ''); // Gunakan setValue untuk reset description
         setChange(0);
       },
       onError: error => {
@@ -169,12 +172,38 @@ export default function KasirPage() {
     });
   };
 
+  // Fungsi untuk download laporan harian
+  const handleDownloadDailyReport = () => {
+    if (userRole === 'admin' && !selectedOutletId) {
+      Swal.fire(
+        'Peringatan',
+        'Silakan pilih outlet terlebih dahulu untuk download laporan.',
+        'warning'
+      );
+      return;
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const params = {
+      date: today,
+      format: 'pdf',
+      ...(userRole === 'admin' &&
+        selectedOutletId && { destination_id: selectedOutletId })
+    };
+
+    getDailyReporting(params)
+  };
+
   return (
     <KasirLayout>
       <form onSubmit={handleSubmit(onSubmit)} className="h-full">
         {/* Container utama dengan padding yang konsisten */}
         <div className="p-4 h-full">
-          {/* Header responsif */}          
+          {/* Header dengan tombol download laporan */}
+          <div className="mb-4 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-800">Kasir</h1>
+          </div>
+
           {/* Grid layout responsif - 1 kolom di mobile, 2 kolom di tablet, 3 kolom di desktop */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Panel kiri: Pemilihan outlet dan produk - span 2 kolom di desktop */}
@@ -182,14 +211,19 @@ export default function KasirPage() {
               {/* Panel outlet untuk admin dengan styling yang lebih baik */}
               {userRole === 'admin' && (
                 <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100 sticky top-14 z-10">
-                  <label className="block mb-2 font-semibold text-gray-700">Pilih Outlet</label>
+                  <label className="block mb-2 font-semibold text-gray-700">
+                    Pilih Outlet
+                  </label>
                   <select
                     className="border border-gray-300 rounded-lg p-2.5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     value={selectedOutletId}
                     onChange={e => {
                       const outletId = e.target.value;
                       setSelectedOutletId(outletId);
-                      const outletName = getOutlet.data?.find(outlet => outlet.id.toString() === outletId)?.name || '';
+                      const outletName =
+                        getOutlet.data?.find(
+                          outlet => outlet.id.toString() === outletId
+                        )?.name || '';
                       setSelectedOutlet(outletName);
                     }}
                   >
@@ -202,19 +236,33 @@ export default function KasirPage() {
                   </select>
                 </div>
               )}
-              
+
               {/* Pesan untuk admin jika belum memilih outlet */}
               {userRole === 'admin' && !selectedOutlet && (
                 <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-6 text-center flex flex-col items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-yellow-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-10 w-10 text-yellow-400 mb-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
-                  <p className="text-gray-600">Silakan pilih outlet terlebih dahulu untuk melihat produk.</p>
+                  <p className="text-gray-600">
+                    Silakan pilih outlet terlebih dahulu untuk melihat produk.
+                  </p>
                 </div>
               )}
-              
+
               {/* Daftar produk dengan scroll area */}
-              <div className={`flex-1 overflow-y-auto pr-1 ${userRole === 'admin' ? 'mt-0' : 'mt-4'}`}>
+              <div className={`flex-1 overflow-y-auto pr-1 ${userRole === 'admin' ? 'mt-0' : 'mt-4'}`}
+              >
                 {filteredSales.length > 0 ? (
                   filteredSales.map((item, index) => (
                     <div
@@ -232,11 +280,11 @@ export default function KasirPage() {
                           {toRupiah(item.cakes?.[0]?.price || 0)}
                         </div>
                       </div>
-                      
+
                       <div className="hidden sm:block text-blue-600 font-medium">
                         {toRupiah(item.cakes?.[0]?.price || 0)}
                       </div>
-                      
+
                       {/* Kontrol jumlah dengan layout responsif */}
                       <div className="flex items-center gap-2 sm:gap-3">
                         <button
@@ -249,7 +297,9 @@ export default function KasirPage() {
                         <input
                           type="number"
                           value={counts[index]?.qty || 0}
-                          onChange={e => handleInputChange(index, e.target.value)}
+                          onChange={e =>
+                            handleInputChange(index, e.target.value)
+                          }
                           className="w-20 sm:w-28 h-9 sm:h-10 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           min={0}
                           max={item.cakes_available}
@@ -266,28 +316,39 @@ export default function KasirPage() {
                   ))
                 ) : selectedOutlet ? (
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-                    <p className="text-gray-500">Tidak ada produk tersedia untuk outlet ini.</p>
+                    <p className="text-gray-500">
+                      Tidak ada produk tersedia untuk outlet ini.
+                    </p>
                   </div>
                 ) : null}
               </div>
             </div>
-            
+
             {/* Panel kanan: Ringkasan pesanan */}
             <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-md h-fit md:sticky md:top-20 z-10">
-              <div className="font-bold text-xl mb-4 pb-2 border-b border-gray-200">Ringkasan Pesanan</div>
-              
+              <div className="font-bold text-xl mb-4 pb-2 border-b border-gray-200">
+                Ringkasan Pesanan
+              </div>
+
               {/* Daftar item yang dipilih */}
               <div className="max-h-[30vh] overflow-y-auto mb-4">
                 {counts.filter(item => item.qty > 0).length > 0 ? (
                   counts
                     .filter(item => item.qty > 0)
                     .map((item, idx) => (
-                      <div key={idx} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
+                      <div
+                        key={idx}
+                        className="flex justify-between py-2 border-b border-gray-100 last:border-0"
+                      >
                         <div className="flex flex-col">
                           <span className="font-medium">{item.name}</span>
-                          <span className="text-sm text-gray-500">{item.qty} x {toRupiah(item.total)}</span>
+                          <span className="text-sm text-gray-500">
+                            {item.qty} x {toRupiah(item.total)}
+                          </span>
                         </div>
-                        <span className="font-medium">{toRupiah(item.qty * item.total)}</span>
+                        <span className="font-medium">
+                          {toRupiah(item.qty * item.total)}
+                        </span>
                       </div>
                     ))
                 ) : (
@@ -296,14 +357,14 @@ export default function KasirPage() {
                   </div>
                 )}
               </div>
-              
+
               {/* Total dan pembayaran */}
               <div className="mt-4">
                 <div className="flex justify-between font-bold text-lg mb-4 pb-2 border-b border-gray-200">
                   <span>Total</span>
                   <span>{toRupiah(total)}</span>
                 </div>
-                
+
                 <div className="mb-4">
                   <InputComponent
                     label="Jumlah Uang"
@@ -313,20 +374,43 @@ export default function KasirPage() {
                     register={register('recieved_money')}
                   />
                 </div>
-                
+
                 <div className="flex justify-between mb-6 font-medium">
                   <span>Kembalian</span>
-                  <span className={change < 0 ? 'text-red-600' : 'text-green-600'}>
+                  <span
+                    className={change < 0 ? 'text-red-600' : 'text-green-600'}
+                  >
                     {toRupiah(change)}
                   </span>
                 </div>
-                
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="description"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Keterangan
+                  </label>
+                  <textarea
+                    id="description"
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-vertical"
+                    placeholder="Masukkan keterangan tambahan (Pia Coklat 2, Pia Kacang 2) jadikan 4 kotak, boleh di kosongkan"
+                    {...register('description')}
+                  />
+                </div>
+
                 <button
                   type="submit"
                   className="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                 >
                   Bayar Sekarang
                 </button>
+                <ButtonComponent
+                  text="Download Laporan Harian (PDF)"
+                  color="bg-blue-600 py-4 px-3 text-white ronded-md mt-7 w-full hover:bg-blue-700"
+                  onClick={handleDownloadDailyReport}
+                />
               </div>
             </div>
           </div>

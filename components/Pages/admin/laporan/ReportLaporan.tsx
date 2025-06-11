@@ -11,9 +11,9 @@ import { getDateReporting } from 'utils/api/reporting/reportingApi';
 
 export function ReportLaporan({ DestinationId }) {
   const schema = yup.object({
-    start_date: yup.date().required('Gaji harus di isi.'),
+    start_date: yup.date().required('Tanggal Mulai harus di isi.'),
     end_date: yup.date().required('Tanggal Akhir harus di isi.'),
-    download: yup.boolean()
+    download_format: yup.string().oneOf(['pdf', 'excel'], 'Format download harus dipilih')
   });
   const {
     register,
@@ -40,7 +40,7 @@ export function ReportLaporan({ DestinationId }) {
       start_date: formatDate(form.start_date),
       end_date: formatDate(form.end_date),
       destination_id: DestinationId,
-      download: form.download && 'pdf'
+      download: form.download_format || null
     };
     getDateReporting(payload);
   };
@@ -62,12 +62,39 @@ export function ReportLaporan({ DestinationId }) {
           error={errors.end_date?.message}
           register={register('end_date')}
         />
-        <InputComponent
-          label={'Download PDF'}
-          type={'checkbox'}
-          error={errors.download?.message}
-          register={register('download')}
-        />
+        
+        {/* Format Download Selection */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Format Download
+          </label>
+          <div className="flex space-x-4">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                value="pdf"
+                {...register('download_format')}
+                className="mr-2"
+              />
+              PDF
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                value="excel"
+                {...register('download_format')}
+                className="mr-2"
+              />
+              Excel
+            </label>
+          </div>
+          {errors.download_format && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.download_format.message}
+            </p>
+          )}
+        </div>
+        
         <ButtonComponent text={'Submit'} color={'btn-primary text-xs w-full'} />
       </div>
     </form>

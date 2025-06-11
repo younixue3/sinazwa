@@ -53,79 +53,7 @@ export const OutletTableComponent = (data: any) => {
     });
   };
 
-  // const buttonAction = (id: any) => {
-  //   return (
-  // <div className={'flex gap-1'}>
-  //   <ModalComponent
-  //     text={<FontAwesomeIcon icon={faEdit} />}
-  //     title={'Kurangi Stock'}
-  //     color={'btn-warning'}
-  //     onClick={() => {
-  //       setOutletId(id);
-  //     }}
-  //   >
-  //     <EditOutlet
-  //       queryClient={queryClient}
-  //       GetDetailOutlet={GetDetailOutlet}
-  //     />
-  //   </ModalComponent>
-  //   <button
-  //     className={'btn-danger'}
-  //     onClick={() => {
-  //       handleDelete(id);
-  //     }}
-  //   >
-  //     <FontAwesomeIcon icon={faTrash} />
-  //   </button>
-  // </div>
-  //   );
-  // };
 
-  // useEffect(() => {
-  //   // const cols = Object.keys(data.data[0]).map(column => ({
-  //   //   name: column,
-  //   //   selector: row => row[column],
-  //   //   width: column == 'no' && '80px',
-  //   //   allowOverflow: null,
-  //   //   sortable: true,
-  //   //   right: column != 'no' && true,
-  //   //   cell: null
-  //   // }));
-  //   // cols.splice(1, 1);
-  //   // cols.push({
-  //   //   name: '#',
-  //   //   right: false,
-  //   //   selector(): any { },
-  //   //   sortable: false,
-  //   //   width: '150px',
-  //   //   allowOverflow: false,
-  //   //   cell: (row: any) => buttonAction(row.id)
-  //   // });
-
-  //   // setColumns(cols);
-  //   // setDatas(data.data);
-  // }, []);
-
-  // const customStyles = {
-  //   table: {
-  //     style: {
-  //       position: 'static'
-  //     }
-  //   },
-  //   tableWrapper: {
-  //     style: {
-  //       position: 'static'
-  //     }
-  //   },
-  //   responsiveWrapper: {
-  //     style: { position: 'static' }
-  //   },
-  //   cells: {
-  //     style: {
-  //       position: 'static'
-  //     }
-  //   }
-  // };
 
   return (
     <div className="overflow-x-auto mt-5">

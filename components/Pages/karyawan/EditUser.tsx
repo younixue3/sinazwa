@@ -14,7 +14,6 @@ import Select from 'react-select';
 
 export function EditUser({ GetDetailUser, queryClient }) {
   const initialValue = GetDetailUser?.data?.data;
-  console.log(initialValue);
   const UpdateUser = useUpdateUser(initialValue?.id);
   const destinationRef = useRef();
   const jobRef = useRef();
