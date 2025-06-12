@@ -3,9 +3,9 @@ import AdminLayout from 'pages/admin/AdminLayout';
 import CardComponent from 'components/Card/CardComponent';
 import OutletExpensesTableComponent from 'components/Table/OutletExpensesTableComponent';
 import { ModalComponent } from 'components/Modal/ModalComponent';
-import SimpleModalComponent from 'components/Modal/SimpleModalComponent';
 import OutletExpenseForm from 'components/Pages/outlet/OutletExpenseForm';
 import EditOutletExpenseForm from 'components/Forms/EditOutletExpenseForm';
+import ScrollableModalComponent from 'components/Modal/ScrollableModalComponent';
 
 export default function OutletExpenses() {
   const [addModalOpened, setAddModalOpened] = useState(false);
@@ -13,10 +13,9 @@ export default function OutletExpenses() {
   const [selectedExpenseId, setSelectedExpenseId] = useState<string | number | null>(null);
 
   const handleEdit = (expense: any) => {
-    
     setSelectedExpenseId(expense.id);
     setEditModalOpened(true);
-    };
+  };
 
   const handleCloseEditModal = () => {
     setEditModalOpened(false);
@@ -47,16 +46,16 @@ export default function OutletExpenses() {
                   </h2>
                 </div>
                 <div className={'col-span-2 flex justify-end'}>
-                  <ModalComponent
+                  <ScrollableModalComponent
                     text="Tambah Pengeluaran"
                     color="bg-blue-600 hover:bg-blue-700 text-white"
                     title="Tambah Pengeluaran Outlet"
                     opened={addModalOpened}
-                    modalToggle={handleAddModalToggle}
+                    onClose={handleAddModalToggle}
                     onClick={handleAddModalToggle}
                   >
                     <OutletExpenseForm onSuccess={handleAddSuccess} />
-                  </ModalComponent>
+                  </ScrollableModalComponent>
                 </div>
               </div>
               <OutletExpensesTableComponent onEdit={handleEdit} />
@@ -65,8 +64,8 @@ export default function OutletExpenses() {
         </div>
       </main>
 
-      {/* Modal Edit Pengeluaran - Menggunakan SimpleModalComponent */}
-      <SimpleModalComponent
+      {/* Modal Edit Pengeluaran - Menggunakan ScrollableModalComponent */}
+      <ScrollableModalComponent
         title="Edit Pengeluaran Outlet"
         opened={editModalOpened}
         onClose={handleCloseEditModal}
@@ -78,7 +77,7 @@ export default function OutletExpenses() {
             onClose={handleCloseEditModal}
           />
         )}
-      </SimpleModalComponent>
+      </ScrollableModalComponent>
     </AdminLayout>
   );
 }

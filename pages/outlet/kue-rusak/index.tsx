@@ -7,7 +7,7 @@ import useGetDestination from 'utils/api/destination/use-get-destination';
 import Swal from 'sweetalert2';
 import useDeleteBrokenCake from 'utils/api/outlet/use-delete-broken-cake';
 import SwalErrors from 'helper/swal-errors';
-import { ModalComponent } from 'components/Modal/ModalComponent';
+import ScrollableModalComponent from 'components/Modal/ScrollableModalComponent';
 import OutletExpenseForm from 'components/Pages/outlet/OutletExpenseForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
@@ -20,6 +20,7 @@ export default function KueRusak() {
   const [searchCategory, setSearchCategory] = useState('');
   const [appliedDate, setAppliedDate] = useState('');
   const [appliedDestination, setAppliedDestination] = useState('');
+  const [modalOpened, setModalOpened] = useState(false); // Tambahkan state ini
   const deleteBrokenCake = useDeleteBrokenCake({});
   const modalRef = useRef<any>();
 
@@ -85,6 +86,7 @@ export default function KueRusak() {
   }
 
   const handleExpenseSuccess = () => {
+    setModalOpened(false); // Tutup modal setelah sukses
     if (modalRef.current) {
       modalRef.current.modalToggle();
     }
@@ -97,18 +99,16 @@ export default function KueRusak() {
 
         {/* Button untuk membuka modal pengeluaran */}
         <div className="">
-          <ModalComponent
-            ref={modalRef}
-            text={
-              <div className=" space-x-2">
-                <span>Tambah Pengeluaran</span>
-              </div>
-            }
+          <ScrollableModalComponent
+            text="Tambah Pengeluaran"
             color="w-full bg-red-600 hover:bg-red-800 text-xs text-white"
             title="Pengeluaran Outlet"
+            opened={modalOpened}
+            onClose={() => setModalOpened(false)}
+            onClick={() => setModalOpened(true)}
           >
             <OutletExpenseForm onSuccess={handleExpenseSuccess} />
-          </ModalComponent>
+          </ScrollableModalComponent>
         </div>
 
         <div className="my-2">
