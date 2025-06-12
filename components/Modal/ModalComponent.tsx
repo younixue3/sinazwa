@@ -68,7 +68,7 @@ export class ModalComponent extends Component<
             >
               <div
                 className={
-                  'w-2/3 bg-white dark:bg-gray-500 p-3 rounded-xl m-auto max-h-[80vh] overflow-y-auto'
+                  'w-2/3 bg-white dark:bg-gray-500 p-3 rounded-xl m-auto max-h-[95vh] overflow-y-auto'
                 }
               >
                 <div className={'flex justify-between'}>
