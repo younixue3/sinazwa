@@ -87,9 +87,9 @@ export default function OutletExpensesTableComponent({
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
               Harga
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+            {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
               Total
-            </th>
+            </th> */}
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
               Deskripsi
             </th>
@@ -123,13 +123,13 @@ export default function OutletExpensesTableComponent({
                   minimumFractionDigits: 0
                 }).format(expense.price)}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b">
+              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b">
                 {new Intl.NumberFormat('id-ID', {
                   style: 'currency',
                   currency: 'IDR',
                   minimumFractionDigits: 0
                 }).format(expense.price * expense.qty)}
-              </td>
+              </td> */}
               <td className="px-6 py-4 text-sm text-gray-900 border-b">
                 <div className="max-w-xs truncate" title={expense.description}>
                   {expense.description || '-'}

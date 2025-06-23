@@ -87,7 +87,7 @@ export default function KueDatang() {
               onChange={handleDestinationChange}
             >
               <option value="">Pilih Outlet</option>
-              {destinations.data?.map((destination) => (
+              {destinations.data?.map(destination => (
                 <option key={destination.value} value={destination.value}>
                   {destination.label}
                 </option>
@@ -111,6 +111,10 @@ export default function KueDatang() {
                     <div className={'w-full flex flex-col gap-2'}>
                       <ButtonComponent
                         text={`${item.cake_production} : ${item.qty_cake} pcs`}
+                        color={'btn-primary text-xs ml-0'}
+                      />
+                       <ButtonComponent
+                        text={`${item.cake_production} : ${item.box} Box`}
                         color={'btn-primary text-xs ml-0'}
                       />
                       <ButtonComponent

@@ -271,8 +271,8 @@ export default function Inventaris() {
                               className={`px-4 py-3 text-center font-semibold ${getStatusColor(item.tipe_riwayat)}`}
                             >
                               {item.tipe_riwayat === '2'
-                                ? 'Jumlah Keluar'
-                                : 'Jumlah Masuk'}
+                                ? 'Keluar'
+                                : 'Masuk'}
                             </td>
                             <td className="px-4 py-3 text-gray-800">
                               {item.created_at}

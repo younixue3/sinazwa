@@ -17,7 +17,8 @@ import { getDailyReporting } from 'utils/api/reporting/reportingApi';
 
 const schema = yup.object({
   recieved_money: yup.string().required('Jumlah Uang harus di isi.'),
-  description: yup.string().optional()
+  description: yup.string().optional(),
+  type_payment: yup.string().required('Tipe pembayaran harus di isi.')
 });
 
 export default function KasirPage() {
@@ -139,6 +140,7 @@ export default function KasirPage() {
         category_cake_id: item.category_cake_id,
         cake_selling: item.qty,
         description: data.description || '', // Pindahkan description ke dalam setiap item
+        type_payment: data.type_payment || 'cash', // Pindahkan description ke dalam setiap item
         ...(userRole === 'admin' &&
           selectedOutletId && { destination_id: selectedOutletId })
       }));
@@ -151,7 +153,7 @@ export default function KasirPage() {
       return;
     }
 
-    // Struktur final payload tanpa description di root level
+    // Struktur final payload dengan metode pembayaran
     const finalPayload = {
       payload,
       ...(userRole === 'admin' &&
@@ -164,6 +166,7 @@ export default function KasirPage() {
         setCounts(counts.map(item => ({ ...item, qty: 0 })));
         setValue('recieved_money', '');
         setValue('description', ''); // Gunakan setValue untuk reset description
+        setValue('type_payment', ''); // Reset type_payment
         setChange(0);
       },
       onError: error => {
@@ -191,7 +194,7 @@ export default function KasirPage() {
         selectedOutletId && { destination_id: selectedOutletId })
     };
 
-    getDailyReporting(params)
+    getDailyReporting(params);
   };
 
   return (
@@ -261,7 +264,8 @@ export default function KasirPage() {
               )}
 
               {/* Daftar produk dengan scroll area */}
-              <div className={`flex-1 overflow-y-auto pr-1 ${userRole === 'admin' ? 'mt-0' : 'mt-4'}`}
+              <div
+                className={`flex-1 overflow-y-auto pr-1 ${userRole === 'admin' ? 'mt-0' : 'mt-4'}`}
               >
                 {filteredSales.length > 0 ? (
                   filteredSales.map((item, index) => (
@@ -400,12 +404,32 @@ export default function KasirPage() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                >
-                  Bayar Sekarang
-                </button>
+                {/* Tombol pembayaran dengan 3 metode */}
+                <div className="grid grid-cols-3 gap-2 mb-4">
+                  <button
+                    type="submit"
+                    onClick={() => setValue('type_payment', 'cash')}
+                    className="py-3 px-2 w-full bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 flex flex-col items-center justify-center"
+                  >
+                    <span className="text-sm sm:text-base">Cash</span>
+                  </button>
+                  <button
+                    type="submit"
+                    onClick={() => setValue('type_payment', 'qris')}
+                    className="py-3 px-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex flex-col items-center justify-center"
+                  >
+                    <span className="text-sm sm:text-base">QRIS</span>
+                  </button>
+                  <button
+                    type="submit"
+                    onClick={() => setValue('type_payment', 'transfer')}
+                    className="py-3 px-2 w-full bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex flex-col items-center justify-center"
+                  >
+                    <span className="text-sm sm:text-base">Transfer</span>
+                  </button>
+                </div>
+                {/* Field tersembunyi untuk payment_method */}
+                <input type="hidden" {...register('type_payment')} />
                 <ButtonComponent
                   text="Download Laporan Harian (PDF)"
                   color="bg-blue-600 py-4 px-3 text-white ronded-md mt-7 w-full hover:bg-blue-700"

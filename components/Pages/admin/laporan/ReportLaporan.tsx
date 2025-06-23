@@ -13,7 +13,7 @@ export function ReportLaporan({ DestinationId }) {
   const schema = yup.object({
     start_date: yup.date().required('Tanggal Mulai harus di isi.'),
     end_date: yup.date().required('Tanggal Akhir harus di isi.'),
-    download_format: yup.string().oneOf(['pdf', 'excel'], 'Format download harus dipilih')
+    download: yup.string().oneOf(['pdf', 'excel'], 'Format download harus dipilih')
   });
   const {
     register,
@@ -39,8 +39,7 @@ export function ReportLaporan({ DestinationId }) {
       ...form,
       start_date: formatDate(form.start_date),
       end_date: formatDate(form.end_date),
-      destination_id: DestinationId,
-      download: form.download_format || null
+      destination_id: DestinationId
     };
     getDateReporting(payload);
   };
@@ -73,7 +72,7 @@ export function ReportLaporan({ DestinationId }) {
               <input
                 type="radio"
                 value="pdf"
-                {...register('download_format')}
+                {...register('download')}
                 className="mr-2"
               />
               PDF
@@ -82,15 +81,15 @@ export function ReportLaporan({ DestinationId }) {
               <input
                 type="radio"
                 value="excel"
-                {...register('download_format')}
+                {...register('download')}
                 className="mr-2"
               />
               Excel
             </label>
           </div>
-          {errors.download_format && (
+          {errors.download && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.download_format.message}
+              {errors.download.message}
             </p>
           )}
         </div>
