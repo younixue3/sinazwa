@@ -109,18 +109,29 @@ export default function KueDatang() {
                       icon={faTruck}
                     />
                     <div className={'w-full flex flex-col gap-2'}>
-                      <ButtonComponent
+                      <div className='flex'>
+                        <ButtonComponent
                         text={`${item.cake_production} : ${item.qty_cake} pcs`}
-                        color={'btn-primary text-xs ml-0'}
+                        color={'btn-primary text-xs ml-0 mx-2'}
                       />
                        <ButtonComponent
                         text={`${item.cake_production} : ${item.box} Box`}
                         color={'btn-primary text-xs ml-0'}
                       />
+                      </div>
                       <ButtonComponent
                         text={item.status_delivery}
                         color={`text-xs ml-0 ${item.status_delivery === 'PROSES' ? 'btn-warning' : 'btn-success'}`}
                       />
+                       {item.status_delivery === 'SELESAI' && item.updated_at && (
+                        <div className="text-sm text-green-600 font-medium">
+                          Diterima :{' '}
+                          {new Date(item.updated_at).toLocaleTimeString('id', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })} 
+                        </div>
+                      )}
                       <div className={'text-xs'}>
                         Jadwal Antar:{' '}
                         {new Date(item.date_delivery).toLocaleDateString('id')}

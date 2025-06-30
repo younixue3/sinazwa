@@ -8,6 +8,7 @@ interface InputComponentProps {
   register?: any;
   value?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 export default class InputComponent extends Component<InputComponentProps> {

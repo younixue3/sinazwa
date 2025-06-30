@@ -15,7 +15,9 @@ const useGetDelivery = () => {
         box: delivery.box,
         status_delivery: delivery.status_delivery,
         date_delivery: delivery.date_delivery,
-        today_shipments_count: delivery.today_shipments_count
+        today_shipments_count: delivery.today_shipments_count,
+        updated_at : delivery.updated_at,
+        created_at : delivery.created_at,
       }));
     }
   });

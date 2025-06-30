@@ -8,6 +8,7 @@ interface ButtonComponentProps {
   children?: React.ReactNode;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }
 
 const ButtonComponent: React.FC<ButtonComponentProps> = ({
@@ -17,6 +18,7 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
   dropdown = false,
   children,
   onClick,
+  disabled,
   type = 'submit'
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -34,6 +36,7 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
         type={type}
         className={themeButton}
         onClick={dropdown ? handleDropdownToggle : onClick}
+        disabled={disabled}
       >
         {text}
       </button>
