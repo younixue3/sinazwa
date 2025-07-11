@@ -54,36 +54,43 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
       .min(1, 'Threshold must be greater than or equal to 1')
   });
 
+  const [threshold, setThreshold] = useState(0);
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors }
   } = useForm({
-    values: initialValue,
-    resolver: yupResolver(schema),
     mode: 'onChange'
   });
 
   const onSubmit = async (formData: any) => {
-    try {
-      await updateDeliveriesThreshold.mutateAsync(formData);
+    const payload = {
+      threshold: threshold
+    };
 
-      Swal.fire({
-        title: 'Success!',
-        text: 'Item has been updated successfully.',
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false
-      });
+    updateDeliveriesThreshold.mutate(payload as any, {
+      onSuccess: () => {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Item has been updated successfully.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
 
-      onUpdate();
-      setOpenModal(false);
-      reset();
-    } catch (err: any) {
-      const errors = err.response?.data;
-      SwalErrors({ errors });
-    }
+        onUpdate();
+        setOpenModal(false);
+        reset();
+      },
+      onError: (err: any) => {
+        const errors = err.response?.data;
+        SwalErrors({ errors });
+      }
+    });
   };
 
   const handleSelectDeliveriesThreshold = (deliveries: CategoryCake) => {
@@ -116,12 +123,14 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <InputComponent
-                      label="Threshold"
+                    <input
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       type="number"
                       placeholder="Enter new threshold"
-                      error={errors.threshold?.message}
-                      register={register('threshold')}
+                      aria-label="Threshold"
+                      onChange={e => {
+                        setThreshold(parseInt(e.target.value));
+                      }}
                     />
                   </div>
                 </div>
