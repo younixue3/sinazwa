@@ -16,6 +16,7 @@ export default function Laporan() {
   const [destinationId, setDestinationId] = useState();
   const [showFormatModal, setShowFormatModal] = useState(false);
   const [selectedOutletId, setSelectedOutletId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   function formatDate(date) {
     var d = new Date(date),
@@ -29,14 +30,21 @@ export default function Laporan() {
     return [year, month, day].join('-');
   }
 
-  const handleDailyReport = (outletId, format) => {
-    getDailyReporting({
-      date: formatDate(today),
-      download: format,
-      destination_id: outletId
-    });
-    setDestinationId(outletId);
-    setShowFormatModal(false);
+  const handleDailyReport = async (outletId, format) => {
+    setIsLoading(true);
+    try {
+      await getDailyReporting({
+        date: formatDate(today),
+        download: format,
+        destination_id: outletId
+      });
+    } catch (error) {
+      console.error('Error downloading report:', error);
+    } finally {
+      setIsLoading(false);
+      setDestinationId(outletId);
+      setShowFormatModal(false);
+    }
   };
 
   const openFormatModal = (outletId) => {
@@ -82,20 +90,33 @@ export default function Laporan() {
               <div className="space-y-3">
                 <ButtonComponent
                   onClick={() => handleDailyReport(selectedOutletId, 'pdf')}
-                  text="Download PDF"
+                  text={isLoading ? "Loading..." : "Download PDF"}
                   color="btn-primary w-full"
+                  disabled={isLoading}
                 />
                 <ButtonComponent
                   onClick={() => handleDailyReport(selectedOutletId, 'excel')}
-                  text="Download Excel"
+                  text={isLoading ? "Loading..." : "Download Excel"}
                   color="btn-success w-full"
+                  disabled={isLoading}
                 />
                 <ButtonComponent
                   onClick={() => setShowFormatModal(false)}
                   text="Batal"
                   color="btn-secondary w-full"
+                  disabled={isLoading}
                 />
               </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Overlay loading saat proses download */}
+        {isLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 flex flex-col items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
+              <p className="text-lg font-medium">Sedang mengunduh laporan...</p>
             </div>
           </div>
         )}

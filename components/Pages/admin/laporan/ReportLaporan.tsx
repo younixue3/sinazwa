@@ -8,8 +8,10 @@ import ButtonComponent from 'components/Button/ButtonComponent';
 import useGetJob from 'utils/api/job/use-get-job';
 import queryClient from 'helper/queryClient';
 import { getDateReporting } from 'utils/api/reporting/reportingApi';
+import { useState } from 'react';
 
 export function ReportLaporan({ DestinationId }) {
+  const [isLoading, setIsLoading] = useState(false);
   const schema = yup.object({
     start_date: yup.date().required('Tanggal Mulai harus di isi.'),
     end_date: yup.date().required('Tanggal Akhir harus di isi.'),
@@ -34,14 +36,26 @@ export function ReportLaporan({ DestinationId }) {
     return [year, month, day].join('-');
   }
 
-  const onSubmit = form => {
-    const payload = {
-      ...form,
-      start_date: formatDate(form.start_date),
-      end_date: formatDate(form.end_date),
-      destination_id: DestinationId
-    };
-    getDateReporting(payload);
+  const onSubmit = async form => {
+    setIsLoading(true);
+    try {
+      const payload = {
+        ...form,
+        start_date: formatDate(form.start_date),
+        end_date: formatDate(form.end_date),
+        destination_id: DestinationId
+      };
+      await getDateReporting(payload);
+    } catch (error) {
+      console.error('Error downloading report:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal mengunduh laporan',
+        text: 'Terjadi kesalahan saat mengunduh laporan'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,6 +67,7 @@ export function ReportLaporan({ DestinationId }) {
           error={errors.start_date?.message}
           type="date"
           register={register('start_date')}
+          disabled={isLoading}
         />
         <InputComponent
           label={'Tanggal Berakhir'}
@@ -60,6 +75,7 @@ export function ReportLaporan({ DestinationId }) {
           placeholder={'Masukkan Tanggal Berakhir'}
           error={errors.end_date?.message}
           register={register('end_date')}
+          disabled={isLoading}
         />
         
         {/* Format Download Selection */}
@@ -74,6 +90,7 @@ export function ReportLaporan({ DestinationId }) {
                 value="pdf"
                 {...register('download')}
                 className="mr-2"
+                disabled={isLoading}
               />
               PDF
             </label>
@@ -83,6 +100,7 @@ export function ReportLaporan({ DestinationId }) {
                 value="excel"
                 {...register('download')}
                 className="mr-2"
+                disabled={isLoading}
               />
               Excel
             </label>
@@ -94,7 +112,18 @@ export function ReportLaporan({ DestinationId }) {
           )}
         </div>
         
-        <ButtonComponent text={'Submit'} color={'btn-primary text-xs w-full'} />
+        <ButtonComponent 
+          text={isLoading ? 'Mengunduh...' : 'Submit'} 
+          color={'btn-primary text-xs w-full'} 
+          disabled={isLoading} 
+        />
+        
+        {isLoading && (
+          <div className="flex items-center justify-center mt-2">
+            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary mr-2"></div>
+            <p className="text-sm">Sedang mengunduh laporan...</p>
+          </div>
+        )}
       </div>
     </form>
   );

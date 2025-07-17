@@ -60,6 +60,15 @@ export default function Delivery() {
                             : 'btn-success'
                         }`}
                       />
+                       {delivery.status_delivery === 'SELESAI' && delivery.updated_at && (
+                        <div className="text-sm text-green-600 font-medium">
+                          Di Terima pada:{' '}
+                          {new Date(delivery.updated_at).toLocaleTimeString('id', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                      )}
                       <div className="text-xs">
                         Jadwal Antar:{' '}
                         {new Date(delivery.date_delivery).toLocaleDateString('id')}

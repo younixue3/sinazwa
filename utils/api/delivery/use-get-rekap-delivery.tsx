@@ -14,7 +14,6 @@ const useGetRekapDelivery = () => {
         destination_id: delivery.destination_id,
         destination_name: delivery.destination_name,
         total_box: delivery.total_box,
-
       }));
     }
   });
