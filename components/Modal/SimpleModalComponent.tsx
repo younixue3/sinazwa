@@ -37,18 +37,30 @@ export default function SimpleModalComponent({
           }}
         />
       )}
-      
+
       {opened && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-500 p-6 rounded-xl w-2/3 max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">{title}</h2>
-              {/* <button
+          <div className="hidden md:block bg-white dark:bg-gray-500 p-6 rounded-xl w-2/3 max-w-4xl max-h-[90vh]">
+            <div className="flex justify-between w-full items-center mb-4">
+              <h2 className="text-xl w-full font-semibold">{title}</h2>
+              <button
                 className="bg-gray-100 hover:bg-gray-200 text-black h-10 w-10 rounded-full flex items-center justify-center transition-colors ml-4"
                 onClick={onClose}
               >
                 <FontAwesomeIcon icon={faXmark} />
-              </button> */}
+              </button>
+            </div>
+            <div>{children}</div>
+          </div>
+          <div className="block md:hidden bg-white dark:bg-gray-500 p-6 rounded-xl w-2/3 max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between w-full items-center mb-4">
+              <h2 className="text-xl w-full font-semibold">{title}</h2>
+              <button
+                className="bg-gray-100 hover:bg-gray-200 text-black h-10 w-10 rounded-full flex items-center justify-center transition-colors ml-4"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
             </div>
             <div>{children}</div>
           </div>

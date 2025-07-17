@@ -18,8 +18,8 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
   dropdown = false,
   children,
   onClick,
-  disabled,
-  type = 'submit'
+  type = 'submit',
+  disabled = false
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
