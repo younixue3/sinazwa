@@ -130,9 +130,9 @@ export function CreateDeliveriesThreshold() {
             </p>
           </div>
           <InputComponent
-            label="Threshold"
+            label="Target Antaran"
             type="number"
-            placeholder="Enter threshold value"
+            placeholder="Masukkan Target Antaran"
             error={errors.threshold?.message}
             register={register('threshold')}
           />

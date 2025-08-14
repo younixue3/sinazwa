@@ -158,7 +158,7 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
           </div>
         )}
       </SimpleModalComponent>
-      <CardComponent title="Today's Delivered Cake Stock">
+      <CardComponent title="Target Pengataran Kue Hari ini">
         <div className="p-6">
           <CreateDeliveriesThreshold />
         </div>
