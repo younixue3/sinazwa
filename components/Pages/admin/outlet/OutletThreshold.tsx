@@ -39,19 +39,19 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
   const [selectedDeliveriesThreshold, setSelectedDeliveriesThreshold] =
     useState<CategoryCake | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [threshold, setThreshold] = useState(0);
+
+  // Declare hooks at the top level with null/undefined IDs initially
+  const updateDeliveriesThreshold = useUpdateDeliveriesThreshold(
+    selectedDeliveriesThreshold?.id
+  );
+  const destroyDeliveriesThreshold = useDestroyDeliveriesThreshold(
+    selectedDeliveriesThreshold?.id
+  );
 
   const initialValue = {
     threshold: selectedDeliveriesThreshold?.threshold ?? 0
   };
-
-  const updateDeliveriesThreshold = useUpdateDeliveriesThreshold(
-    selectedDeliveriesThreshold?.id
-  );
-
-  // Move the destroy hook to the top level
-  const destroyDeliveriesThreshold = useDestroyDeliveriesThreshold(
-    selectedDeliveriesThreshold?.id
-  );
 
   const schema = yup.object({
     threshold: yup
@@ -59,8 +59,6 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
       .required('Threshold is required')
       .min(1, 'Threshold must be greater than or equal to 1')
   });
-
-  const [threshold, setThreshold] = useState(0);
 
   const {
     register,
@@ -74,10 +72,13 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
   });
 
   const onSubmit = async (formData: any) => {
+    if (!selectedDeliveriesThreshold) return;
+    
     const payload = {
       threshold: threshold
     };
 
+    // Use the hook instance that was declared at the top level
     updateDeliveriesThreshold.mutate(payload as any, {
       onSuccess: () => {
         Swal.fire({
@@ -104,6 +105,9 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
   };
 
   const handleDeleteDeliveriesThreshold = (cake: CategoryCake) => {
+    // Set the selected item first, then perform the delete
+    setSelectedDeliveriesThreshold(cake);
+    
     Swal.fire({
       title: 'Are you sure?',
       text: `You want to delete ${cake.category_cake_name}?`,
@@ -114,24 +118,26 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        setSelectedDeliveriesThreshold(cake);
-        // Use the hook that's already declared at the top level
-        destroyDeliveriesThreshold.mutate(undefined, {
-          onSuccess: () => {
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'Item has been deleted successfully.',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false
-            });
-            onUpdate();
-          },
-          onError: (err: any) => {
-            const errors = err.response?.data;
-            SwalErrors({ errors });
-          }
-        });
+        // Use setTimeout to ensure state update is processed
+        setTimeout(() => {
+          destroyDeliveriesThreshold.mutate(undefined, {
+            onSuccess: () => {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'Item has been deleted successfully.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+              });
+              onUpdate();
+              setSelectedDeliveriesThreshold(null);
+            },
+            onError: (err: any) => {
+              const errors = err.response?.data;
+              SwalErrors({ errors });
+            }
+          });
+        }, 0);
       }
     });
   };
@@ -172,8 +178,9 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
                       placeholder="Enter new threshold"
                       aria-label="Threshold"
                       min="1"
+                      defaultValue={selectedDeliveriesThreshold.threshold}
                       onChange={e => {
-                        setThreshold(parseInt(e.target.value));
+                        setThreshold(parseInt(e.target.value) || 0);
                       }}
                     />
                   </div>
@@ -331,6 +338,7 @@ const OutletThreshold: React.FC<OutletThresholdProps> = ({
                                   className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center justify-center space-x-1"
                                   onClick={() => {
                                     handleSelectDeliveriesThreshold(cake);
+                                    setThreshold(cake.threshold); // Set initial threshold value
                                     setOpenModal(true);
                                   }}
                                 >
