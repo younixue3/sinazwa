@@ -9,7 +9,14 @@ export function middleware(request: NextRequest) {
 
   // Debugging: Tampilkan role di console server
 
-  // Jika user mengakses route admin dan bukan admin, arahkan ke /login
+  // Batasi akses: role inventory hanya boleh mengakses Inventaris (dan Home)
+  // Middleware ini aktif pada halaman fitur lain, jadi jika role inventory mencoba akses,
+  // arahkan kembali ke Home.
+  if (role === 'inventory') {
+    return NextResponse.redirect(new URL('/home', request.url));
+  }
+
+  // Jika user mengakses route admin dan bukan admin, arahkan ke Home
   if (pathname.startsWith('/admin') && role !== 'admin') {
     return NextResponse.redirect(new URL('/home', request.url));
   }
@@ -18,5 +25,13 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'], // Middleware aktif untuk /admin/*
+  // Middleware aktif untuk halaman fitur selain Inventaris
+  matcher: [
+    '/admin/:path*',
+    '/produksi/:path*',
+    '/delivery/:path*',
+    '/outlet/:path*',
+    '/kasir/:path*',
+    '/absensi/:path*'
+  ]
 };

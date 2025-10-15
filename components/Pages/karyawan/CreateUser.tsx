@@ -61,7 +61,8 @@ export function CreateUser() {
   const role = [
     { value: 'seller', label: 'Seller' },
     { value: 'produksi', label: 'Produksi' },
-    { value: 'delivery', label: 'Delivery' }
+    { value: 'delivery', label: 'Delivery' },
+    { value: 'inventory', label: 'Inventory' }
   ];
 
   const onSubmit = form => {

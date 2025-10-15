@@ -59,7 +59,8 @@ export function EditUser({ GetDetailUser, queryClient }) {
   const role = [
     { value: 'seller', label: 'Seller' },
     { value: 'produksi', label: 'Produksi' },
-    { value: 'delivery', label: 'Delivery' }
+    { value: 'delivery', label: 'Delivery' },
+    { value: 'inventory', label: 'Inventory' }
   ];
 
   useEffect(() => {

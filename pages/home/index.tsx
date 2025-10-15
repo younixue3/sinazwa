@@ -133,6 +133,17 @@ export default function Home() {
             ))}
           </>
         );
+      case 'inventory':
+        return (
+          <>
+            <MenuItem
+              href="/inventaris"
+              icon={faBox}
+              color="green-500"
+              label="Inventaris"
+            />
+          </>
+        );
       case 'produksi':
         return (
           <>
