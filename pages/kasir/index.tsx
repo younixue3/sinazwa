@@ -270,7 +270,7 @@ export default function KasirPage() {
                 {filteredSales.length > 0 ? (
                   filteredSales.map((item, index) => (
                     <div
-                      key={item.sale_id}
+                      key={`${item.sale_id ?? item.cakes?.[0]?.cake_id ?? index}`}
                       className="bg-white border border-gray-200 rounded-lg p-4 mb-3 flex flex-col sm:flex-row items-center gap-3 shadow-sm hover:shadow transition-all"
                     >
                       <div className="flex-1 text-center sm:text-left mb-3 sm:mb-0 w-full sm:w-auto">
@@ -341,7 +341,7 @@ export default function KasirPage() {
                     .filter(item => item.qty > 0)
                     .map((item, idx) => (
                       <div
-                        key={idx}
+                        key={`${item.id}-${item.category_cake_id}`}
                         className="flex justify-between py-2 border-b border-gray-100 last:border-0"
                       >
                         <div className="flex flex-col">
