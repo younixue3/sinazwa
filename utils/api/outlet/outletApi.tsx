@@ -42,7 +42,7 @@ const deleteBrokenCake = async id => {
 
 const historySaleCake = async () => {
   const result = await hitApi().get('/history-detail-sale');
-  return result.data;
+  return result.data.data;
 };
 
 const storeOutletExpenses = async payload => {

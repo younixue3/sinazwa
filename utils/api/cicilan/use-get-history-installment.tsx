@@ -6,13 +6,14 @@ const useGetHistoryInstallment = () => {
     queryKey: useGetHistoryInstallment.keys(),
     queryFn: getHistoryInstallment,
     select: ({ data }) => {
-      return data.map((history, index) => ({
+      const list = Array.isArray(data) ? data : [];
+      return list.map((history: any, index: number) => ({
         no: index + 1,
-        id: history.id,
-        created_at: history.created_at,
-        user: history.user.name,
-        total_installment: history.total_instalments,
-        category_cake: history.category_cake.name,
+        id: history?.id ?? null,
+        created_at: history?.created_at ?? null,
+        user: history?.user?.name ?? null,
+        total_installment: history?.total_instalments ?? 0,
+        category_cake: history?.category_cake?.name ?? null,
       }));
     }
   });

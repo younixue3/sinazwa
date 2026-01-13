@@ -15,11 +15,20 @@ import { AUTH_ROLE } from 'utils/constants/cookies-keys';
 
 export default function Outlet() {
   const { data: sales, isLoading } = useGetSale();
-  const { data: saleHistories, isLoading: isLoadingHistory } = useGetHistoryCakeSale();
+  const [historyPage, setHistoryPage] = useState(1);
+  const [pageSize] = useState(10);
   const { data: outlets } = useGetOutlet({});
   const [userRole, setUserRole] = useState('');
   const [selectedOutlet, setSelectedOutlet] = useState('');
   const [selectedOutletId, setSelectedOutletId] = useState('');
+  const { data: saleHistoryQuery, isLoading: isLoadingHistory } = useGetHistoryCakeSale({
+    page: historyPage,
+    perPage: pageSize,
+    outletId: selectedOutletId || undefined
+  });
+  console.log(saleHistoryQuery);
+  const saleHistories = saleHistoryQuery?.items || [];
+  const saleHistoryMeta = saleHistoryQuery?.meta || {};
   
   // Ambil role dari cookies
   useEffect(() => {
@@ -72,6 +81,7 @@ export default function Outlet() {
                 value={selectedOutletId}
                 onChange={e => {
                   const outletId = e.target.value;
+                  setHistoryPage(1);
                   setSelectedOutletId(outletId);
                   const outletName = outlets?.find(outlet => outlet.id.toString() === outletId)?.name || '';
                   setSelectedOutlet(outletName);
@@ -170,6 +180,29 @@ export default function Outlet() {
               Tidak ada data riwayat penjualan
             </div>
           )}
+          <div className="flex items-center justify-center gap-3 mt-2">
+            <button
+              className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setHistoryPage(p => Math.max(1, p - 1))}
+              disabled={(saleHistoryMeta?.current_page ?? historyPage) <= 1}
+            >
+              Sebelumnya
+            </button>
+            <span className="text-sm text-gray-700">
+              Halaman {(saleHistoryMeta?.current_page ?? historyPage)}
+            </span>
+            <button
+              className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setHistoryPage(p => p + 1)}
+              disabled={
+                saleHistoryMeta?.last_page
+                  ? (saleHistoryMeta?.current_page ?? historyPage) >= saleHistoryMeta?.last_page
+                  : saleHistories.length < pageSize
+              }
+            >
+              Berikutnya
+            </button>
+          </div>
         </section>
       </TabComponent>
     </OutletLayout>

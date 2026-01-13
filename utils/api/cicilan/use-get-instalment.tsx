@@ -6,14 +6,15 @@ const useGetInstallment = () => {
     queryKey: useGetInstallment.keys(),
     queryFn: getInstallment,
     select: ({ data }) => {
-      return data.map((installment, index) => ({
+      const list = Array.isArray(data) ? data : [];
+      return list.map((installment: any, index: number) => ({
         no: index + 1,
-        id: installment.id,
-        daily_installment: installment.daily_installments,
-        remaining_installment: installment.remaining_installments,
-        remaining_yesterday: installment.remaining_yesterday,
-        user: installment.user.name,
-        aktif: installment.aktif,
+        id: installment?.id ?? null,
+        daily_installment: installment?.daily_installments ?? 0,
+        remaining_installment: installment?.remaining_installments ?? 0,
+        remaining_yesterday: installment?.remaining_yesterday ?? 0,
+        user: installment?.user?.name ?? null,
+        aktif: installment?.aktif ?? false,
       }));
     }
   });
